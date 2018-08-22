@@ -1,0 +1,34 @@
+%clear all;
+%clc;
+
+import matlab.net.*
+import matlab.net.http.*
+
+parfor i = 1:10
+    r = RequestMessage;
+    origin_lat =    num2str(PreHTTPRequest(1,3),10);
+    origin_lng =    num2str(PreHTTPRequest(1,4),10);
+    dest_lat =      num2str(PreHTTPRequest(1,5),10);
+    dest_lng =      num2str(PreHTTPRequest(1,6),10);
+    origin_coord = origin_lat + "," + origin_lng;
+    dest_coord = dest_lat + "," + dest_lng;
+    base_Req = "https://maps.googleapis.com/maps/api/directions/json?origin=";
+    dest_tag = "&destination=";
+    mode = "&mode=bycicling";
+
+    uri = URI(base_Req + origin_coord + dest_tag + dest_coord + mode);
+    resp = send(r,uri);
+    status = resp.StatusCode
+
+    if status == 'OK' 
+
+       PreHTTPRequest(1,7) = resp.Body.Data.routes.legs.distance.value;
+       PreHTTPRequest(1,8) = resp.Body.Data.routes.legs.duration.value;
+
+    else
+
+       PreHTTPRequest(1,7) = 0;
+       PreHTTPRequest(1,8) = 0;
+
+    end
+end
