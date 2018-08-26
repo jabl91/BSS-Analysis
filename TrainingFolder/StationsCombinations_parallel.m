@@ -2,9 +2,9 @@ cleanGPU();
 %%
 load('stations.mat');
 %%
-load ('tripsData201712.mat');
+load ('full_tripsData201712.mat');
 %%
-BD_myTripsData = tall(tripsData201712);
+BD_myTripsData = tall(full_tripsData201712);
 %%
 %Creation of histogram for Travel Time (Saved under graphics folder)
 histogram(BD_myTripsData.Travel_time_seconds,400,'BinLimits',[1,3000]);
@@ -52,7 +52,7 @@ load('table_AllCombinationsBetweenStations_GoogleData_Distance_Time_Latitude.mat
 MAX_NUMBER_STATIONS = 1000;
 
 %It is required to create a new index so the two tables can be joined.
-ConvertedCodeForRoutes = (table2array(BD_myTripsData(:,2))*MAX_NUMBER_STATIONS) + table2array(BD_myTripsData(:,3));
+ConvertedCodeForRoutes = (table2array(BD_myTripsData(:,7))*MAX_NUMBER_STATIONS) + table2array(BD_myTripsData(:,8));
 tb_ConvertedCodeForRoutes = array2table(ConvertedCodeForRoutes,'VariableNames',{'Route_Index'});
 IndexedTableWithAllTrips = [tb_ConvertedCodeForRoutes, BD_myTripsData];
 %%
@@ -104,3 +104,7 @@ h3 = histogram(zOut_SingleTrips.bicy_google_distance,400,'BinLimits',[0,10000]);
 %Histogram of the difference on altitude between the origin and the destination.
 altitudeDifference = zOut_SingleTrips.altitude_dest - zOut_SingleTrips.altitude_origin;
 h4 = histogram(altitudeDifference,400,'BinLimits',[-100,100]);
+
+%Histogram of the distribution of trips along a single day
+[hours,~,~] = hms(zOut_SingleTrips.Inicio_del_viaje)
+h5 = histogram(hours,24);
