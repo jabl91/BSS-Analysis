@@ -1,0 +1,8 @@
+<routes>
+   <vType id="bike" length="0.6" width="0.2" maxSpeed="1" accel="0.2" decel="1.5" sigma="0.5" speedDev="0.5" vClass="bicycle"/>
+   <flow id="bike_0" type="bike" from="312688112#6" to="312688112#6" begin="0" end="3000" number="100" departPos="last"/>
+   <flow id="bike_1" type="bike" from="106327587#1" to="312688112#6" begin="0" end="3000" number="100" departPos="last"/>
+   <flow id="bike_2" type="bike" from="298742255#1" to="312688112#6" begin="0" end="3000" number="100" departPos="last"/>
+   <flow id="bike_3" type="bike" from="-132973777" to="312688112#6" begin="0" end="3000" number="100" departPos="last"/>
+   <flow id="bike_4" type="bike" from="-105857084#0" to="312688112#6" begin="0" end="3000" number="100" departPos="last"/>
+</routes>

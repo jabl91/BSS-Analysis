@@ -1,0 +1,5 @@
+<routes>
+   <vType id="car" type="passenger" length="5" accel="0.5" decel="0.2" sigma="1.0"/>
+   <flow id="carflow" type="car" beg="0" end="0" number="25" from="edge1" to="edge2"/>
+   <flow id="carflow2" type="car" beg="0" end="0" number="8" from="edge3" to="edge4"/>
+</routes>

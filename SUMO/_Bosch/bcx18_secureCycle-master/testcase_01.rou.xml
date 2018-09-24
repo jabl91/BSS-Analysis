@@ -1,0 +1,7 @@
+<routes>
+    <vType accel="2.0" decel="5.0" id="Car" length="5.0" maxSpeed="50.0" sigma="0.0" width="2.0" latAlignment="right" minGap="4.0"  />
+    <vType accel="1.0" decel="2.0" id="Bike" length="2.0" maxSpeed="5.0" sigma="0.0" width="0.5" latAlignment="right" guiShape="bicycle" minGap="4.0"/>
+    <route id="route0" edges="gneE0 gneE1"/>
+    <vehicle depart="0" id="veh1" route="route0" type="Bike" departPosLat="right" />
+    <vehicle depart="1" id="veh0" route="route0" type="Car" departPosLat="right" />
+</routes>
