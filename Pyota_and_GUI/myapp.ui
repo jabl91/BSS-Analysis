@@ -91,8 +91,8 @@
             </child>
             <child>
               <object class="ttk.Button" id="btn_triangle">
-                <property name="command">btn_triangle_clicked</property>
-                <property name="image">ps_triangle.gif</property>
+                <property name="command">show_updating_dialog</property>
+                <property name="image">update.png</property>
                 <property name="style">Toolbutton</property>
                 <property name="text" translatable="yes">triangle</property>
                 <layout>
@@ -105,7 +105,7 @@
             <child>
               <object class="ttk.Button" id="btn_circle">
                 <property name="command">btn_circle_clicked</property>
-                <property name="image">ps_circle.gif</property>
+                <property name="image">close.png</property>
                 <property name="style">Toolbutton</property>
                 <property name="text" translatable="yes">circle</property>
                 <layout>
@@ -118,24 +118,11 @@
             <child>
               <object class="ttk.Button" id="btn_cross">
                 <property name="command">btn_cross_clicked</property>
-                <property name="image">ps_cross.gif</property>
+                <property name="image">lock.png</property>
                 <property name="style">Toolbutton</property>
                 <property name="text" translatable="yes">cross</property>
                 <layout>
                   <property name="column">4</property>
-                  <property name="propagate">True</property>
-                  <property name="row">0</property>
-                </layout>
-              </object>
-            </child>
-            <child>
-              <object class="ttk.Button" id="btn_square">
-                <property name="command">btn_square_clicked</property>
-                <property name="image">ps_square.gif</property>
-                <property name="style">Toolbutton</property>
-                <property name="text" translatable="yes">square</property>
-                <layout>
-                  <property name="column">5</property>
                   <property name="propagate">True</property>
                   <property name="row">0</property>
                 </layout>
@@ -402,7 +389,7 @@
             <layout>
               <property name="column">0</property>
               <property name="propagate">True</property>
-              <property name="row">4</property>
+              <property name="row">14</property>
               <property name="sticky">ew</property>
             </layout>
             <child>
@@ -418,6 +405,88 @@
                 </layout>
               </object>
             </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Labelframe" id="BatReservationFrame">
+        <property name="height">400</property>
+        <property name="text" translatable="yes">Battery Reservation</property>
+        <property name="width">200</property>
+        <layout>
+          <property name="column">2</property>
+          <property name="ipadx">10</property>
+          <property name="ipady">0</property>
+          <property name="padx">0</property>
+          <property name="pady">10</property>
+          <property name="propagate">True</property>
+          <property name="row">0</property>
+        </layout>
+        <child>
+          <object class="ttk.Button" id="Bat1_Reserve">
+            <property name="command">Bat1_Reserve_Set</property>
+            <property name="text" translatable="yes">Battery 1</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="propagate">True</property>
+              <property name="row">0</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Label" id="Bat1_Reserve_Label">
+            <property name="background">#57ea5a</property>
+            <property name="text" translatable="yes">Available</property>
+            <layout>
+              <property name="column">1</property>
+              <property name="propagate">True</property>
+              <property name="row">0</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Button" id="Bat2_Reserve">
+            <property name="command">Bat2_Reserve_Set</property>
+            <property name="text" translatable="yes">Battery 2</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="propagate">True</property>
+              <property name="row">1</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Label" id="Bat2_Reserve_Label">
+            <property name="background">#57ea5a</property>
+            <property name="text" translatable="yes">Available</property>
+            <layout>
+              <property name="column">1</property>
+              <property name="propagate">True</property>
+              <property name="row">1</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Button" id="Bat3_Reserve">
+            <property name="command">Bat3_Reserve_Set</property>
+            <property name="text" translatable="yes">Battery 3</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="propagate">True</property>
+              <property name="row">2</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Label" id="Bat3_Reserve_Label">
+            <property name="background">#57ea5a</property>
+            <property name="text" translatable="yes">Available</property>
+            <layout>
+              <property name="column">1</property>
+              <property name="propagate">True</property>
+              <property name="row">2</property>
+            </layout>
           </object>
         </child>
       </object>
@@ -480,7 +549,7 @@
             <child>
               <object class="ttk.Label" id="Label_1">
                 <property name="font">{Helvetica} 16 {}</property>
-                <property name="text" translatable="yes">Myapp</property>
+                <property name="text" translatable="yes">Battery Swapping MVP</property>
                 <layout>
                   <property name="column">0</property>
                   <property name="propagate">True</property>
@@ -490,9 +559,9 @@
             </child>
             <child>
               <object class="ttk.Label" id="Label_2">
-                <property name="justify">right</property>
+                <property name="justify">center</property>
                 <property name="text" translatable="yes">This is a demo app for testing
-application freezing systems.</property>
+application.</property>
                 <layout>
                   <property name="column">0</property>
                   <property name="propagate">True</property>
@@ -534,6 +603,275 @@ under public domain)</property>
             </layout>
             <child>
               <object class="ttk.Button" id="about_btnclose">
+                <property name="text" translatable="yes">Close</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="propagate">True</property>
+                  <property name="row">0</property>
+                  <property name="sticky">e</property>
+                </layout>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="pygubu.builder.widgets.dialog" id="dlg_updating">
+    <property name="cursor">arrow</property>
+    <property name="geometry">240x200</property>
+    <property name="height">100</property>
+    <property name="minsize">100|100</property>
+    <property name="modal">false</property>
+    <property name="resizable">both</property>
+    <property name="title" translatable="yes">Updating Data</property>
+    <property name="width">200</property>
+    <child>
+      <object class="ttk.Frame" id="about_fcontaner_1">
+        <property name="height">200</property>
+        <property name="width">200</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="propagate">True</property>
+          <property name="row">0</property>
+          <property name="sticky">nsew</property>
+          <rows>
+            <row id="0">
+              <property name="weight">1</property>
+            </row>
+          </rows>
+          <columns>
+            <column id="0">
+              <property name="weight">1</property>
+            </column>
+          </columns>
+        </layout>
+        <child>
+          <object class="ttk.Frame" id="about_fmain_2">
+            <property name="height">200</property>
+            <property name="width">200</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="propagate">True</property>
+              <property name="row">0</property>
+              <property name="sticky">nsew</property>
+              <rows>
+                <row id="0">
+                  <property name="weight">1</property>
+                </row>
+                <row id="1">
+                  <property name="weight">1</property>
+                </row>
+                <row id="2">
+                  <property name="weight">1</property>
+                </row>
+              </rows>
+              <columns>
+                <column id="0">
+                  <property name="weight">1</property>
+                </column>
+              </columns>
+            </layout>
+            <child>
+              <object class="ttk.Label" id="Label_8">
+                <property name="font">{Helvetica} 16 {}</property>
+                <property name="justify">center</property>
+                <property name="text" translatable="yes">Update Batteries
+Information</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="propagate">True</property>
+                  <property name="row">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Label" id="Label_9">
+                <property name="justify">center</property>
+                <property name="text" translatable="yes">The latest battery information 
+will be retrieved.</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="propagate">True</property>
+                  <property name="row">1</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Progressbar" id="Updating_PB">
+                <property name="orient">horizontal</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="propagate">True</property>
+                  <property name="row">2</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Button" id="startUpdate">
+                <property name="text" translatable="yes">Start Update</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="propagate">True</property>
+                  <property name="row">3</property>
+                </layout>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Frame" id="about_fbottom_3">
+            <property name="height">200</property>
+            <property name="padding">2 20 2 2</property>
+            <property name="width">200</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="propagate">True</property>
+              <property name="row">1</property>
+              <property name="sticky">ew</property>
+              <columns>
+                <column id="0">
+                  <property name="weight">1</property>
+                </column>
+              </columns>
+            </layout>
+            <child>
+              <object class="ttk.Button" id="about_btnclose_upd">
+                <property name="text" translatable="yes">Close</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="propagate">True</property>
+                  <property name="row">0</property>
+                  <property name="sticky">e</property>
+                </layout>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="pygubu.builder.widgets.dialog" id="dlg_purchase">
+    <property name="cursor">arrow</property>
+    <property name="geometry">240x280</property>
+    <property name="height">100</property>
+    <property name="minsize">100|100</property>
+    <property name="modal">false</property>
+    <property name="resizable">both</property>
+    <property name="title" translatable="yes">Swap Battery</property>
+    <property name="width">200</property>
+    <child>
+      <object class="ttk.Frame" id="about_fcontaner_1_4">
+        <property name="height">200</property>
+        <property name="width">200</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="propagate">True</property>
+          <property name="row">0</property>
+          <property name="sticky">nsew</property>
+          <rows>
+            <row id="0">
+              <property name="weight">1</property>
+            </row>
+          </rows>
+          <columns>
+            <column id="0">
+              <property name="weight">1</property>
+            </column>
+          </columns>
+        </layout>
+        <child>
+          <object class="ttk.Frame" id="about_fmain_2_5">
+            <property name="height">200</property>
+            <property name="width">200</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="propagate">True</property>
+              <property name="row">0</property>
+              <property name="sticky">nsew</property>
+              <rows>
+                <row id="0">
+                  <property name="weight">1</property>
+                </row>
+                <row id="1">
+                  <property name="weight">1</property>
+                </row>
+                <row id="2">
+                  <property name="weight">1</property>
+                </row>
+              </rows>
+              <columns>
+                <column id="0">
+                  <property name="weight">1</property>
+                </column>
+              </columns>
+            </layout>
+            <child>
+              <object class="ttk.Label" id="Label_11">
+                <property name="font">{Helvetica} 16 {}</property>
+                <property name="justify">center</property>
+                <property name="text" translatable="yes">Swap Battery</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="propagate">True</property>
+                  <property name="row">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Label" id="purchaseInfo">
+                <property name="justify">center</property>
+                <property name="text" translatable="yes">A battery swap event will be charged to
+your account.</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="propagate">True</property>
+                  <property name="row">1</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Button" id="btn_success">
+                <property name="image">check.png</property>
+                <property name="state">disabled</property>
+                <property name="text" translatable="yes">Button_11</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="propagate">True</property>
+                  <property name="row">2</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Button" id="startPurchase">
+                <property name="text" translatable="yes">Purchase</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="propagate">True</property>
+                  <property name="row">3</property>
+                </layout>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Frame" id="about_fbottom_3_6">
+            <property name="height">200</property>
+            <property name="padding">2 20 2 2</property>
+            <property name="width">200</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="propagate">True</property>
+              <property name="row">1</property>
+              <property name="sticky">ew</property>
+              <columns>
+                <column id="0">
+                  <property name="weight">1</property>
+                </column>
+              </columns>
+            </layout>
+            <child>
+              <object class="ttk.Button" id="about_btnclose_prch">
                 <property name="text" translatable="yes">Close</property>
                 <layout>
                   <property name="column">0</property>

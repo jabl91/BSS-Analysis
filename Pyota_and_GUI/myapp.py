@@ -7,6 +7,8 @@ import tkinter.messagebox
 import tkinter.ttk as ttk
 import pygubu
 
+import time
+
 from Pyota.IOTAMonitor \
     import IOTAInterface as IOTAMonitor
 
@@ -30,6 +32,8 @@ class MyApplication:
         self.BatteriesMonitor = IOTAMonitor()
         #self.BatteriesData = self.BatteriesMonitor.getAllBatteriesData()
         
+        
+        
         self.mainwindow = b.get_object('mainwindow')
         self.mainmenu = b.get_object('mainmenu', self.mainwindow)
         self.btn_menu = b.get_object('btn_menu')
@@ -45,7 +49,14 @@ class MyApplication:
         
         self.BatTS1   = b.get_object('Bat1_TS')
         self.BatTS2   = b.get_object('Bat2_TS')
-        self.BatTS3   = b.get_object('Bat3_TS')        
+        self.BatTS3   = b.get_object('Bat3_TS')
+
+        self.Bat1Res    =b.get_object('Bat1_Reserve_Label')
+        self.Bat2Res    =b.get_object('Bat2_Reserve_Label')
+        self.Bat3Res    =b.get_object('Bat3_Reserve_Label')
+        
+        self.updating_dialog = None
+        self.purchase_dialog = None
         
         #self.ScrollBar4 = b.get_object('Bat4_PB')
         #self.ScrollBar5 = b.get_object('Bat5_PB')
@@ -88,12 +99,74 @@ class MyApplication:
             dialog.run()
         else:
             self.about_dialog.show()
+            
+            
+    def show_updating_dialog(self):
+        if self.updating_dialog is None:
+            dialog = self.builder.get_object('dlg_updating', self.mainwindow)
+            self.updating_dialog = dialog
+        
+            def dialog_btnclose_clicked():
+                dialog.close()
+            
+            btnclose = self.builder.get_object('about_btnclose_upd')
+            btnclose['command'] = dialog_btnclose_clicked
+            
+            btnupdate = self.builder.get_object('startUpdate')
+            btnupdate['command'] = self.btn_triangle_clicked
+            
+            dialog.run()
+            
+        else:
+            self.updating_dialog_PB = self.builder.get_object('Updating_PB')
+            self.updating_dialog_PB["value"] = 0
+            self.updating_dialog.show()
+            
+            
+    def show_purchase_dialog(self):
+        dlg_purchase = self.builder.get_object('dlg_purchase')
+        PurchaseInfo = self.builder.get_object('purchaseInfo',dlg_purchase)
+        btnPurchase = self.builder.get_object('startPurchase')
+        PurchaseInfo["text"] = "A battery swap event will be charged to\nyour account."
+    
+        if self.purchase_dialog is None:
+            dialog = dlg_purchase
+            self.purchase_dialog = dialog
+        
+            def dialog_btnclose_clicked():
+                dialog.close()
+                
+            def dialog_btprsch_clicked():
+                time.sleep(3)
+                PurchaseInfo["text"] = "Battery has been purchased."
+                btnPurchase['state'] = "disabled"
+                btnupdate = self.builder.get_object('btn_success')
+                btnupdate['state'] = "normal"
+            
+            btnclose = self.builder.get_object('about_btnclose_prch')
+            btnclose['command'] = dialog_btnclose_clicked
+            
+            btnPurchase = self.builder.get_object('startPurchase')
+            btnPurchase['command'] = dialog_btprsch_clicked
+            
+            dialog.run()
+            
+        else:
+            btnupdate = self.builder.get_object('btn_success')
+            btnupdate['state'] = "disabled"
+            btnPurchase['state'] = "enabled"
+            self.purchase_dialog.show()
     
     def btn_square_clicked(self):
-        self._draw_figure('square')
+        self.show_updating_dialog()
     
     def btn_cross_clicked(self):
-        self._draw_figure('cross')
+        self.Bat1Res["text"] = "Available"
+        self.Bat1Res["background"] = "#57ea5a"
+        self.Bat2Res["text"] = "Available"
+        self.Bat2Res["background"] = "#57ea5a"
+        self.Bat3Res["text"] = "Available"
+        self.Bat3Res["background"] = "#57ea5a"
         
     def btn_circle_clicked(self):
         self.ScrollBar1["value"] = 0
@@ -104,6 +177,10 @@ class MyApplication:
         self.BatPerc3["text"] = str(0) + '%'
         
     def btn_triangle_clicked(self):
+
+        self.updating_dialog_PB = self.builder.get_object('Updating_PB')
+        self.updating_dialog_PB.start()
+    
         self.BatteriesData = self.BatteriesMonitor.getAllBatteriesData()
         
         if "1" in self.BatteriesData:
@@ -127,6 +204,10 @@ class MyApplication:
         else:
             self.ScrollBar3["value"] = 0
             self.BatPerc2["text"] = str(0) + '%'
+            
+            
+        self.updating_dialog_PB.stop()
+        self.updating_dialog_PB["value"] = 100
         
     def quit(self, event=None):
         self.mainwindow.quit()
@@ -229,6 +310,29 @@ class MyApplication:
             coords.append((xm + j * x3, ym - j * y3))
 
         return coords
+    
+        #57ea5a Available
+        #f05551 Not Available
+    def Bat1_Reserve_Set(self):
+    
+        if self.Bat1Res["text"] == "Available":
+            self.show_purchase_dialog()
+            self.Bat1Res["text"] = "Not Available"
+            self.Bat1Res["background"] = "#f05551"
+
+    def Bat2_Reserve_Set(self):
+        
+        if self.Bat2Res["text"] == "Available":
+            self.show_purchase_dialog()
+            self.Bat2Res["text"] = "Not Available"
+            self.Bat2Res["background"] = "#f05551" 
+
+    def Bat3_Reserve_Set(self):
+        if self.Bat3Res["text"] == "Available":
+            self.show_purchase_dialog()
+            self.Bat3Res["text"] = "Not Available"
+            self.Bat3Res["background"] = "#f05551"             
+    
 
 
 if __name__ == '__main__':
