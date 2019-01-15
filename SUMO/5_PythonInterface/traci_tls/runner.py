@@ -12,7 +12,8 @@
 # @author  Daniel Krajzewicz
 # @author  Michael Behrisch
 # @author  Jakob Erdmann
-# @date    2009-03-26
+# @author  Alberto Briseno
+# @date    2019-01-11
 # @version $Id$
 
 from __future__ import absolute_import
@@ -41,30 +42,35 @@ def generate_routefile():
     pWE = 1. / 10
     pEW = 1. / 11
     pNS = 1. / 30
-    with open("data/cross.rou.xml", "w") as routes:
+    with open('data/cross.rou.xml', 'w') as routes:
         print("""<routes>
-        <vType id="typeWE" accel="0.8" decel="4.5" sigma="0.5" length="5" minGap="2.5" maxSpeed="16.67" \
-guiShape="passenger"/>
-        <vType id="typeNS" accel="0.8" decel="4.5" sigma="0.5" length="7" minGap="3" maxSpeed="25" guiShape="bus"/>
+            <vType id="typeWE" accel="0.8" decel="4.5"
+            sigma="0.5" length="5" minGap="2.5" maxSpeed="16.67"
+            guiShape="passenger"/>
+            <vType id="typeNS" accel="0.8" decel="4.5" sigma=
+            "0.5" length="7" minGap="3" maxSpeed="25" guiShape="bus"/>
 
-        <route id="right" edges="51o 1i 2o 52i" />
-        <route id="left" edges="52o 2i 1o 51i" />
+        <route id="right" edges="51o 1i 2o 2oz 52i" />
+        <route id="left" edges="52o 2iz 2i 1o 51i" />
         <route id="down" edges="54o 4i 3o 53i" />""", file=routes)
         vehNr = 0
         for i in range(N):
             if random.uniform(0, 1) < pWE:
-                print('    <vehicle id="right_%i" type="typeWE" route="right" depart="%i" />' % (
+                print('    <vehicle id="right_%i" type="typeWE" \
+                        route="right" depart="%i" />' % (
                     vehNr, i), file=routes)
                 vehNr += 1
             if random.uniform(0, 1) < pEW:
-                print('    <vehicle id="left_%i" type="typeWE" route="left" depart="%i" />' % (
+                print('    <vehicle id="left_%i" type="typeWE" \
+                        route="left" depart="%i" />' % (
                     vehNr, i), file=routes)
                 vehNr += 1
             if random.uniform(0, 1) < pNS:
-                print('    <vehicle id="down_%i" type="typeNS" route="down" depart="%i" color="1,0,0"/>' % (
+                print('    <vehicle id="down_%i" type="typeNS" \
+                        route="down" depart="%i" color="1,0,0"/>' % (
                     vehNr, i), file=routes)
                 vehNr += 1
-        print("</routes>", file=routes)
+        print('</routes>', file=routes)
 
 # The program looks like this
 #    <tlLogic id="0" type="static" programID="0" offset="0">
@@ -80,36 +86,50 @@ def run():
     """execute the TraCI control loop"""
     step = 0
     # we start with phase 2 where EW has green
-    traci.trafficlight.setPhase("0", 2)
+    traci.trafficlight.setPhase('0', 2)
+    traci.route.add('myDynamicTrip', ['startEdge', 'endEdge'])
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
-        if traci.trafficlight.getPhase("0") == 2:
+        if traci.trafficlight.getPhase('0') == 2:
             # we are not already switching
-            if traci.inductionloop.getLastStepVehicleNumber("0") > 0:
+            if traci.inductionloop.getLastStepVehicleNumber('0') > 0:
                 # there is a vehicle from the north, switch
-                traci.trafficlight.setPhase("0", 3)
+                traci.trafficlight.setPhase('0', 3)
             else:
                 # otherwise try to keep green for EW
-                traci.trafficlight.setPhase("0", 2)
+                traci.trafficlight.setPhase('0', 2)
         step += 1
+        if step % 100 == 0:
+            traci.vehicle.add('DynamicVeh_' + str(step),
+                              'myDynamicTrip',
+                              typeID='DEFAULT_VEHTYPE')
+            traci.vehicle.setColor('DynamicVeh_' + str(step),
+                                   (0, 255, 0))
+        if step % 20 == 0:
+            allActiveVehicles = traci.vehicle.getIDList()
+            dynamicVehicles = [s for s in allActiveVehicles
+                               if 'DynamicVeh_' in s]
+            if dynamicVehicles:
+                print(dynamicVehicles)
     traci.close()
     sys.stdout.flush()
 
 
 def get_options():
     optParser = optparse.OptionParser()
-    optParser.add_option("--nogui", action="store_true",
-                         default=False, help="run the commandline version of sumo")
+    optParser.add_option('--nogui', action='store_true',
+                         default=False,
+                         help='run the commandline version of sumo')
     options, args = optParser.parse_args()
     return options
 
 
 # this is the main entry point of this script
-if __name__ == "__main__":
+if __name__ == '__main__':
     options = get_options()
 
-    # this script has been called from the command line. It will start sumo as a
-    # server, then connect and run
+    # this script has been called from the command line.
+    # It will start sumo as a server, then connect and run
     if options.nogui:
         sumoBinary = checkBinary('sumo')
     else:
@@ -118,8 +138,11 @@ if __name__ == "__main__":
     # first, generate the route file for this simulation
     generate_routefile()
 
-    # this is the normal way of using traci. sumo is started as a
+    # Support for MultiClient TraCI Requests
+    # traci.setOrder(0)
+
+    # This is the normal way of using traci. sumo is started as a
     # subprocess and then the python script connects and runs
-    traci.start([sumoBinary, "-c", "data/cross.sumocfg",
-                             "--tripinfo-output", "tripinfo.xml"])
+    traci.start([sumoBinary, '-c', 'data/cross.sumocfg',
+                             '--tripinfo-output', 'tripinfo.xml'])
     run()
