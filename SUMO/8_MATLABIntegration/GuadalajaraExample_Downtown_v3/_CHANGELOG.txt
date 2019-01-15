@@ -1,0 +1,1 @@
+v3 Removed all traffic lights because of problem with current sumo web 3d tool.

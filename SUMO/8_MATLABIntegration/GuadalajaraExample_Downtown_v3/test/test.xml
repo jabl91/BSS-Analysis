@@ -1,0 +1,43 @@
+<routes>
+   <vType id="bike" length="0.6" width="0.2" vClass="bicycle"/>
+   <flow id="bike_0" type="bike" from="-119417247#3" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_1" type="bike" from="-119417247#4" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_2" type="bike" from="-125565889#2" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_3" type="bike" from="167280591#13" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_4" type="bike" from="167280591#16" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_5" type="bike" from="298742258#12" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_6" type="bike" from="-113540626" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_7" type="bike" from="127152801#1" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_8" type="bike" from="113540628#3" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_9" type="bike" from="406471828#1" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_10" type="bike" from="33266147#1" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_11" type="bike" from="122546198#0" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_12" type="bike" from="431593431#2" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_13" type="bike" from="106327587#5" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_14" type="bike" from="431593429#5" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_15" type="bike" from="120209283#1" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <!-- <flow id="bike_16" type="bike" from="312688113#5" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/> -->
+   <flow id="bike_17" type="bike" from="312688113#2" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_18" type="bike" from="312688112#6" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <!-- <flow id="bike_19" type="bike" from="463935777" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/> -->
+   <flow id="bike_20" type="bike" from="106327587#1" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_21" type="bike" from="312538668#16" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_22" type="bike" from="33266672#0" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_23" type="bike" from="105538498" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_24" type="bike" from="132742473#14" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_25" type="bike" from="-132973777" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_26" type="bike" from="-105857084#0" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_27" type="bike" from="431593421#6" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_28" type="bike" from="312538668#20" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_29" type="bike" from="431593417#1" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_30" type="bike" from="406494990#2" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_31" type="bike" from="217202641#2" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_32" type="bike" from="220080268#2" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_33" type="bike" from="431593415#2" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_34" type="bike" from="220080268#2" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_35" type="bike" from="217202641#2" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_36" type="bike" from="406494993#3" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_37" type="bike" from="33266644#9" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <flow id="bike_38" type="bike" from="431592588#2" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/>
+   <!-- <flow id="bike_39" type="bike" from="463705530" to="-119417247#3" begin="0" end="3000" number="50" departPos="random_free"/> -->
+</routes>

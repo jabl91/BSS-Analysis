@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 01/15/19 15:31:54 by Eclipse SUMO GUI Version 1.1.0
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="osm.net.xml"/>
+        <route-files value="MySUMORoutesTest.rou.xml"/>
+        <additional-files value="osm.poly.xml"/>
+    </input>
+
+    <output>
+        <tripinfo-output value="output/tripinfo.xml"/>
+    </output>
+
+    <time>
+        <step-length value="0.1"/>
+    </time>
+
+    <processing>
+        <lateral-resolution value="1"/>
+        <ignore-route-errors value="true"/>
+        <scale value="3"/>
+        <lanechange.overtake-right value="true"/>
+        <default.action-step-length value="1"/>
+    </processing>
+
+    <routing>
+        <device.rerouting.adaptation-steps value="200"/>
+        <device.rerouting.threads value="4"/>
+    </routing>
+
+    <report>
+        <verbose value="true"/>
+        <duration-log.statistics value="true"/>
+        <no-step-log value="true"/>
+    </report>
+
+    <traci_server>
+        <remote-port value="59798"/>
+    </traci_server>
+
+    <gui_only>
+        <gui-settings-file value="osm.view.xml"/>
+        <tracker-interval value="0.1"/>
+    </gui_only>
+
+</configuration>
+-->
+
+<tripinfos xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/tripinfo_file.xsd">
+</tripinfos>

@@ -1,0 +1,1 @@
+duarouter --route-files test\test.xml --net-file osm.net.xml --output-file=MySUMORoutesTest.rou.xml -b 0 -e 3000 --randomize-flows --unsorted-input true
