@@ -55,8 +55,6 @@ def run():
                                if 'DynamicVeh2_' in s]
             if dynamicVehicles:
                 print(dynamicVehicles)
-
-            print(traci.vehicletype.getIDList())
     traci.close()
     sys.stdout.flush()
 
