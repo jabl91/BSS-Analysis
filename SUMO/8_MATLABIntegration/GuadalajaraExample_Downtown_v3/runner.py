@@ -92,20 +92,36 @@ def run():
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
         step += 1
-        if step % (50/STEP_SIZE) == 0:
+        if step % (10/STEP_SIZE) == 0:
             traci.vehicle.add('DynamicVeh_' + str(step),
                               'myDynamicTrip',
                               typeID='DEFAULT_VEHTYPE')
             traci.vehicle.setColor('DynamicVeh_' + str(step),
                                    (0, 0, 255))
-        if step % (25/STEP_SIZE) == 0:
+            traci.vehicle.setRoutingMode(
+                                'DynamicVeh_' + str(step),
+                                traci.constants.ROUTING_MODE_AGGREGATED)
+            traci.vehicle.changeTarget('DynamicVeh_' + str(step),
+                                       'endEdge')
+
+            traci.vehicle.setParameter('DynamicVeh_' + str(step),
+                                       'has.rerouting.device',
+                                       'true')
+
+            traci.vehicle.setParameter('DynamicVeh_' + str(step),
+                                       'device.rerouting.period',
+                                       '1')
+        if step % (5/STEP_SIZE) == 0:
             allActiveVehicles = traci.vehicle.getIDList()
             dynamicVehicles = [s for s in allActiveVehicles
                                if 'DynamicVeh_' in s]
             if dynamicVehicles:
                 print(dynamicVehicles)
+        if step % (100/STEP_SIZE) == 0:
+            if dynamicVehicles:
+                traci.vehicle.changeTarget(dynamicVehicles[0], 'startEdge')
 
-            print(traci.vehicletype.getIDList())
+            # print(traci.vehicletype.getIDList())
     traci.close()
     sys.stdout.flush()
 

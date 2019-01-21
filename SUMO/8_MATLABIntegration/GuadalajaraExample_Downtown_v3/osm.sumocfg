@@ -28,8 +28,10 @@
 	</time>
 
     <routing>
-        <device.rerouting.adaptation-steps value="200"/>
+        <device.rerouting.adaptation-steps value="180"/>
 		<device.rerouting.threads value="4"/>
+		<device.rerouting.period value="1"/>
+		<device.rerouting.probability value="1.0"/>
     </routing>
 
     <report>
