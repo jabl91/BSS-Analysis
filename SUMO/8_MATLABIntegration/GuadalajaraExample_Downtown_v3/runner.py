@@ -18,6 +18,7 @@
 
 from __future__ import absolute_import
 from __future__ import print_function
+from RouteAnalysis import RouteAnalysis
 
 import os
 import sys
@@ -89,6 +90,8 @@ def run():
     step = 0
 
     traci.route.add('myDynamicTrip', ['startEdge', 'endEdge'])
+    myRouteAnalysis = RouteAnalysis()
+
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
         step += 1
@@ -115,11 +118,22 @@ def run():
             allActiveVehicles = traci.vehicle.getIDList()
             dynamicVehicles = [s for s in allActiveVehicles
                                if 'DynamicVeh_' in s]
+
             if dynamicVehicles:
-                print(dynamicVehicles)
-        if step % (100/STEP_SIZE) == 0:
+                vehicleEdge = myRouteAnalysis.convertVehicleLane2VehicleEdge(
+                              traci.vehicle.getLaneID(dynamicVehicles[0]))
+                print(traci.edge.getLaneNumber(vehicleEdge))
+
+        if step % (50/STEP_SIZE) == 0:
             if dynamicVehicles:
                 traci.vehicle.changeTarget(dynamicVehicles[0], 'startEdge')
+
+            myCurrentRoutes = traci.route.getIDList()
+            if myCurrentRoutes:
+                myRouteAnalysis.setCurrentRoute(myCurrentRoutes[0])
+                # print(myRouteAnalysis.getCurrentRoute())
+                # print(myRouteAnalysis.getAllEdges())
+                myRouteAnalysis.setTestMode()
 
             # print(traci.vehicletype.getIDList())
     traci.close()
