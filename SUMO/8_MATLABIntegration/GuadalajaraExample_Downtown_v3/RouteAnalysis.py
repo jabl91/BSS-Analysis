@@ -19,6 +19,10 @@ from __future__ import print_function
 # import optparse
 # import random
 
+from myPythonDependencies.myConstants import myConstants
+
+import traci
+
 
 class bcolors:
     HEADER = '\033[95m'
@@ -35,10 +39,22 @@ class RouteAnalysis:
 
     myRoute = ''
     myDecision = ''
+    AllLanes = []
+    AllEdges = []
+    LaneToEdge = {}
 
     def __init__(self):
-        self.myRoute = 'CurrentRoute'
+        self.myRoute = 'myRoute'
         self.myDecision = 'CurrentRoute'
+        self.AllLanes = traci.lane.getIDList()
+        self.AllEdges = traci.edge.getIDList()
+
+        for myLane in self.AllLanes:
+            # self.LaneToEdge.append(traci.lane.getEdgeID(myLane))
+            self.LaneToEdge[myLane] = traci.lane.getEdgeID(myLane)
+
+        # print(self.LaneToEdge[self.AllLanes[0]])
+        # input('Press Enter to continue...')
 
     def __str__(self):
         return (bcolors.OKBLUE +
@@ -50,6 +66,24 @@ class RouteAnalysis:
                 '(Snizek, 2015)\n' +
                 bcolors.ENDC)
 
+    def setCurrentRoute(self, myLocalRoute):
+        self.myRoute = myLocalRoute
+
+    def getCurrentRoute(self):
+        return self.myRoute
+
+    def getAllEdges(self):
+        return traci.route.getEdges(self.myRoute)
+
+    def convertVehicleLane2VehicleEdge(self, myLocalLane):
+        return self.LaneToEdge[myLocalLane]
+
+    def setTestMode(self):
+        if traci.route.getEdges(self.myRoute):
+            allEdges = traci.route.getEdges(self.myRoute)
+            firstEdge = allEdges[0]
+            # print(traci.edge.getIDList())
+
     # def __setattr__(self, name, value):
         # print(bcolors.WARNING + 'ERROR: The attribute ' +
         #      name + ' doesnt exist' + bcolors.ENDC)
@@ -59,5 +93,7 @@ class RouteAnalysis:
         #      name + ' doesnt exist' + bcolors.ENDC)
 
 
-myRouteAnalysis = RouteAnalysis()
-print(myRouteAnalysis)
+# myRoute = traci.route()
+
+# myRouteAnalysis = RouteAnalysis(myRoute)
+# print(myRouteAnalysis)
