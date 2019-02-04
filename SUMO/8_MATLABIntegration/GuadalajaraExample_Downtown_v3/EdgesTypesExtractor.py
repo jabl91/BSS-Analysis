@@ -2,6 +2,8 @@ from __future__ import absolute_import
 from __future__ import print_function
 import xml.etree.ElementTree as ET
 
+import traci
+
 
 class EdgeTypesExtractor:
 
@@ -17,7 +19,7 @@ class EdgeTypesExtractor:
     # road); off-road path exclusively for cyclists, and finally off-road
     # path shared by cyclists and pedestrians.
 
-    CONVERSION_DICT = {
+    DECISION_CONVER_DICT = {
                     'cycleway.lane': 'cyclepath',
                     'cycleway.opposite_lane': 'cyclepath',
                     'cycleway.opposite_track': 'cyclepath',
@@ -107,17 +109,49 @@ class EdgeTypesExtractor:
         for myEdge in self.__getRoot().iter('edge'):
             if(myEdge.attrib.get('type')):
                 currentTypeSet = myEdge.attrib.get('type')
-                if(self.CONVERSION_DICT[currentTypeSet]):
+                if(self.DECISION_CONVER_DICT[currentTypeSet]):
                     EdgeToEdgeType[myEdge.attrib.get('id')] = \
-                            self.CONVERSION_DICT[currentTypeSet]
+                            self.DECISION_CONVER_DICT[currentTypeSet]
                 else:
                     EdgeToEdgeType[myEdge.attrib.get('id')] = None
 
         return EdgeToEdgeType
 
+    def getCenterofEdgeDict(self):
+        EdgetoEdgeCenter = {}
+        EdgeLinearEquation = {}
+
+        for myEdge in self.__getRoot().iter('edge'):
+            if(myEdge.findall('lane')):
+                myLanes = myEdge.findall('lane')
+                myShape = myLanes[0].attrib.get('shape')
+                myPoints = myShape.split()
+                myPoints = [i.split(',') for i in myPoints]
+                myPoints = myPoints[0] + myPoints[1]
+                myPoints = list(map(float, myPoints))
+                PosX = ((myPoints[0] + myPoints[2]) / 2.0)
+                PosY = ((myPoints[1] + myPoints[3]) / 2.0)
+                if(myPoints[2] != myPoints[0]):
+                    m_Edge = (myPoints[3] - myPoints[1]) / \
+                             (myPoints[2] - myPoints[0])
+                else:
+                    m_Edge = traci.gui.getBoundary()
+                    m_Edge = abs(m_Edge[0][1]) + abs(m_Edge[1][1])
+
+                b_Edge = (myPoints[1]) - (m_Edge * myPoints[0])
+
+                EdgetoEdgeCenter[myEdge.attrib.get('id')] = \
+                    ['{:.3f}'.format(item) for item in [PosX, PosY]]
+
+                EdgeLinearEquation[myEdge.attrib.get('id')] = \
+                    [m_Edge, b_Edge]
+
+        return EdgetoEdgeCenter, EdgeLinearEquation
+
 
 # treeNet = ET.parse('osm.net.xml')
-myExtractor = EdgeTypesExtractor('osm.net.xml')
+# myExtractor = EdgeTypesExtractor('osm.net.xml')
 
-print(myExtractor.getEdgeTypeDict())
+# print(myExtractor.getCenterofEdgeDict())
+# print(myExtractor.getEdgeTypeDict())
 # print(myExtractor.findAllAvailableTypes())

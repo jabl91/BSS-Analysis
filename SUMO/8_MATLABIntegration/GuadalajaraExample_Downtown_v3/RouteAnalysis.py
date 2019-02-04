@@ -20,8 +20,11 @@ from __future__ import print_function
 # import random
 
 from myPythonDependencies.myConstants import myConstants
+from EdgesTypesExtractor import EdgeTypesExtractor
 
 import traci
+
+import math
 
 
 class bcolors:
@@ -43,6 +46,10 @@ class RouteAnalysis:
     AllEdges = []
     LaneToEdge = {}
 
+    EdgetoEdgeType = {}
+    EdgetoEdgeCenter = {}
+    EdgeLinearEquation = {}
+
     def __init__(self):
         self.myRoute = 'myRoute'
         self.myDecision = 'CurrentRoute'
@@ -55,6 +62,14 @@ class RouteAnalysis:
 
         # print(self.LaneToEdge[self.AllLanes[0]])
         # input('Press Enter to continue...')
+
+        myEdgeDataExtractor = EdgeTypesExtractor('osm.net.xml')
+
+        self.EdgetoEdgeType = \
+            myEdgeDataExtractor.getEdgeTypeDict()
+        self.EdgetoEdgeCenter, self.EdgeLinearEquation = \
+            myEdgeDataExtractor.getCenterofEdgeDict()
+        # print(self.EdgeLinearEquation)
 
     def __str__(self):
         return (bcolors.OKBLUE +
@@ -79,10 +94,31 @@ class RouteAnalysis:
         return self.LaneToEdge[myLocalLane]
 
     def setTestMode(self):
+        currentTypes = []
+        currentEdgeCenters = []
+        currentEdgeLinearEquation = []
         if traci.route.getEdges(self.myRoute):
             allEdges = traci.route.getEdges(self.myRoute)
-            firstEdge = allEdges[0]
+            for myEdge in allEdges:
+                currentTypes.append(
+                    self.EdgetoEdgeType[myEdge])
+                currentEdgeCenters.append(
+                    self.EdgetoEdgeCenter[myEdge])
+                currentEdgeLinearEquation.append(
+                    self.EdgeLinearEquation[myEdge])
+            print(currentTypes)
+            print(currentEdgeCenters)
+            print(currentEdgeLinearEquation)
+            # input('Press Enter to continue...')
             # print(traci.edge.getIDList())
+
+    def __convertCentersToAngleDiff(self, centersList):
+        convertedList = []
+        cenListLength = len(centersList)
+        # for i, element in enumerate(centersList):
+        #    if(i < (cenListLength-1)):
+        #        convertedList =
+
 
     # def __setattr__(self, name, value):
         # print(bcolors.WARNING + 'ERROR: The attribute ' +
