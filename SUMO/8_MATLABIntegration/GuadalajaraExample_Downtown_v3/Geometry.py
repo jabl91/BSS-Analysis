@@ -12,6 +12,7 @@
 # @version $Id$
 
 import math
+import traci
 
 
 class GeometryClass:
@@ -40,8 +41,44 @@ class GeometryClass:
             pow((Point1[0] - Point2[0]), 2))
         return distance
 
+    def getBoundary_Y(self):
+        traciBoundary_Y = traci.gui.getBoundary()
+        traciBoundary_Y = \
+            abs(traciBoundary_Y[0][1]) + \
+            abs(traciBoundary_Y[1][1])
+        return traciBoundary_Y
+
+    def getAngleBetweenVectors(self, Vector1, Vector2, ref=[0, 0]):
+
+        Vector1 = [float(i) for i in Vector1]
+        Vector2 = [float(i) for i in Vector2]
+        ref = [float(i) for i in ref]
+        Vector1 = [Vector1[0] - ref[0], Vector1[1] - ref[1]]
+        Vector2 = [Vector2[0] - ref[0], Vector2[1] - ref[1]]
+
+        # print(Vector1, Vector2)
+
+        distVector1 = self.getDistance([0, 0], Vector1)
+        distVector2 = self.getDistance([0, 0], Vector2)
+
+        # print(distVector1, distVector2)
+        dotProduct = \
+            (Vector1[0]*Vector2[0]) + (Vector1[1]*Vector2[1])
+
+        # print(dotProduct)
+
+        cosTheta = (dotProduct)/(distVector1*distVector2)
+
+        if(cosTheta > 1.0):
+            cosTheta = 1.0
+        if(cosTheta < -1.0):
+            cosTheta = -1.0
+
+        return math.degrees(math.acos(cosTheta))
+
 
 # myGeometryAPI = GeometryClass()
+# print(myGeometryAPI.getAngleBetweenVectors([-2, 2], [2, 2], [0, 0]))
 # myDistance = myGeometryAPI.getDistance([-5, -5], [0, 0])
 # print(myDistance)
 
