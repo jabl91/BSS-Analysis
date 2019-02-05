@@ -21,6 +21,7 @@ from __future__ import print_function
 
 from myPythonDependencies.myConstants import myConstants
 from EdgesTypesExtractor import EdgeTypesExtractor
+from Geometry import GeometryClass
 
 import traci
 
@@ -49,6 +50,11 @@ class RouteAnalysis:
     EdgetoEdgeType = {}
     EdgetoEdgeCenter = {}
     EdgeLinearEquation = {}
+
+    currentTypes = []
+    currentEdgeCenters = []
+    currentEdgeLinearEquation = []
+    VectorPointDirection = []
 
     def __init__(self):
         self.myRoute = 'myRoute'
@@ -94,31 +100,86 @@ class RouteAnalysis:
         return self.LaneToEdge[myLocalLane]
 
     def setTestMode(self):
-        currentTypes = []
-        currentEdgeCenters = []
-        currentEdgeLinearEquation = []
+        myGeometryAPI = GeometryClass()
+        EdgeAngleWeights = []
+        self.currentTypes = []
+        self.currentEdgeCenters = []
+        self.currentEdgeLinearEquation = []
+
         if traci.route.getEdges(self.myRoute):
             allEdges = traci.route.getEdges(self.myRoute)
             for myEdge in allEdges:
-                currentTypes.append(
+                self.currentTypes.append(
                     self.EdgetoEdgeType[myEdge])
-                currentEdgeCenters.append(
+                self.currentEdgeCenters.append(
                     self.EdgetoEdgeCenter[myEdge])
-                currentEdgeLinearEquation.append(
+                self.currentEdgeLinearEquation.append(
                     self.EdgeLinearEquation[myEdge])
-            print(currentTypes)
-            print(currentEdgeCenters)
-            print(currentEdgeLinearEquation)
+
+            print(self.currentTypes)
+            print(self.currentEdgeCenters)
+            print(self.currentEdgeLinearEquation)
+
+            # This function will calculate the VectorPointDirection
+            # this is needed to now the directions of the current
+            # route
+
+            self.__findVectorDirection(
+                self.currentEdgeCenters, self.currentEdgeLinearEquation)
+
+            lastRouteEdge = len(self.currentEdgeCenters) - 1
+            for i, DirectionPoint in enumerate(self.VectorPointDirection):
+                EdgeAngleWeights.append(myGeometryAPI.getAngleBetweenVectors(
+                    DirectionPoint,
+                    self.currentEdgeCenters[lastRouteEdge],
+                    self.currentEdgeCenters[i]))
+
+            EdgeAngleWeights = [(1 - i/180.0) for i in EdgeAngleWeights]
+            print(EdgeAngleWeights)
+
             # input('Press Enter to continue...')
             # print(traci.edge.getIDList())
 
-    def __convertCentersToAngleDiff(self, centersList):
-        convertedList = []
-        cenListLength = len(centersList)
-        # for i, element in enumerate(centersList):
-        #    if(i < (cenListLength-1)):
-        #        convertedList =
+    def __findVectorDirection(self, EdgeCenters, EdgeLinEqs):
+        myGeometryAPI = GeometryClass()
+        eval_val = myGeometryAPI.getBoundary_Y()
+        len_EC = len(EdgeCenters)
+        self.VectorPointDirection = []
+        for i, EdgeCenter in enumerate(EdgeCenters):
+            if((len_EC - 1) > i):
+                # Find the closest value to point to find vector direction
+                x_rng = \
+                        [(eval_val*(-1)) + float(EdgeCenter[0]),
+                         eval_val + float(EdgeCenter[0])]
 
+                y_neg = \
+                    ((EdgeLinEqs[i][0])*x_rng[0]) + EdgeLinEqs[i][1]
+
+                y_pos = \
+                    ((EdgeLinEqs[i][0])*x_rng[1]) + EdgeLinEqs[i][1]
+
+                neg_dist = myGeometryAPI.getDistance(
+                    [x_rng[0], y_neg],
+                    [float(EdgeCenters[i+1][0]), float(EdgeCenters[i+1][1])])
+
+                pos_dist = myGeometryAPI.getDistance(
+                    [x_rng[1], y_pos],
+                    [float(EdgeCenters[i+1][0]), float(EdgeCenters[i+1][1])])
+
+                if(neg_dist < pos_dist):
+                    distantVectorPoint = [x_rng[0], y_neg]
+                else:
+                    distantVectorPoint = [x_rng[1], y_pos]
+
+                self.VectorPointDirection.append(distantVectorPoint)
+                angleBetweenEdges = \
+                    myGeometryAPI.getAngleBetweenVectors(
+                        distantVectorPoint,
+                        [float(EdgeCenters[i+1][0]),
+                         float(EdgeCenters[i+1][1])],
+                        [float(EdgeCenter[0]),
+                         float(EdgeCenter[1])])
+                # print(angleBetweenEdges)
 
     # def __setattr__(self, name, value):
         # print(bcolors.WARNING + 'ERROR: The attribute ' +

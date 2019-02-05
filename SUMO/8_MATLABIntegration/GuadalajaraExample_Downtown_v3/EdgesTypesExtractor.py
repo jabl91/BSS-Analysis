@@ -3,7 +3,7 @@ from __future__ import print_function
 import xml.etree.ElementTree as ET
 
 import traci
-
+from Geometry import GeometryClass
 
 class EdgeTypesExtractor:
 
@@ -118,6 +118,7 @@ class EdgeTypesExtractor:
         return EdgeToEdgeType
 
     def getCenterofEdgeDict(self):
+        myGeometryAPI = GeometryClass()
         EdgetoEdgeCenter = {}
         EdgeLinearEquation = {}
 
@@ -131,14 +132,11 @@ class EdgeTypesExtractor:
                 myPoints = list(map(float, myPoints))
                 PosX = ((myPoints[0] + myPoints[2]) / 2.0)
                 PosY = ((myPoints[1] + myPoints[3]) / 2.0)
-                if(myPoints[2] != myPoints[0]):
-                    m_Edge = (myPoints[3] - myPoints[1]) / \
-                             (myPoints[2] - myPoints[0])
-                else:
-                    m_Edge = traci.gui.getBoundary()
-                    m_Edge = abs(m_Edge[0][1]) + abs(m_Edge[1][1])
 
-                b_Edge = (myPoints[1]) - (m_Edge * myPoints[0])
+                traciBoundary_Y = myGeometryAPI.getBoundary_Y()
+
+                m_Edge, b_Edge = myGeometryAPI.getSlopeandIntercept(
+                    myPoints[0:2], myPoints[2:4], traciBoundary_Y)
 
                 EdgetoEdgeCenter[myEdge.attrib.get('id')] = \
                     ['{:.3f}'.format(item) for item in [PosX, PosY]]

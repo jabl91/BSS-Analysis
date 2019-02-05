@@ -122,8 +122,8 @@ def run():
             if dynamicVehicles:
                 vehicleEdge = myRouteAnalysis.convertVehicleLane2VehicleEdge(
                               traci.vehicle.getLaneID(dynamicVehicles[0]))
-                print(traci.edge.getLaneNumber(vehicleEdge))
-                print(360 - traci.vehicle.getAngle(dynamicVehicles[0]))
+                # print(traci.edge.getLaneNumber(vehicleEdge))
+                # print(360 - traci.vehicle.getAngle(dynamicVehicles[0]))
 
         if step % (50/STEP_SIZE) == 0:
             # if dynamicVehicles:
