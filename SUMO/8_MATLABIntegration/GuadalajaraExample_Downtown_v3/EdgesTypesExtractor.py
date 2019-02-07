@@ -146,9 +146,23 @@ class EdgeTypesExtractor:
 
         return EdgetoEdgeCenter, EdgeLinearEquation
 
+    def getEdgeToInsersectionDict(self):
+        EdgeToEdgeConnection = {}
+        for myRoadConnection in self.__getRoot().iter('connection'):
+            currentRoad = myRoadConnection.attrib.get('from')
+            destinationRoad = myRoadConnection.attrib.get('to')
+            EdgeToEdgeConnection.setdefault(currentRoad, [])
+            EdgeToEdgeConnection[currentRoad].append(destinationRoad)
+            # if(currentRoad in EdgeToEdgeConnection.keys()):
+            #    EdgeToEdgeConnection[currentRoad] = \
+            #        [EdgeToEdgeConnection[currentRoad], destinationRoad]
+        # print(EdgeToEdgeConnection)
+        return EdgeToEdgeConnection
+
 
 # treeNet = ET.parse('osm.net.xml')
-# myExtractor = EdgeTypesExtractor('osm.net.xml')
+myExtractor = EdgeTypesExtractor('osm.net.xml')
+myExtractor.getEdgeToInsersectionDict()
 
 # print(myExtractor.getCenterofEdgeDict())
 # print(myExtractor.getEdgeTypeDict())
