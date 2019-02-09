@@ -165,17 +165,14 @@ class RouteAnalysis:
                 Destination,
                 NotARoute,
                 BaseEdgeIdx))
+
+            return AngleEdgeWeights
             # print('\n\nThe angle weights are:')
             # print(AngleEdgeWeights)
             # print('\n\n')
 
-    def setTestMode(self):
-        # print('Test Mode Started')
-        # print(self.currentEdgeCenters)
-        self.processDecisionWeightsForEdges(
-            self.currentEdgeCenters,
-            self.currentEdgeLinearEquation,
-            self.currentEdgeCenters[-1])
+    def getAdyacentAngleWeight(self):
+        RouteEdgetoAdyacentEdges = {}
 
         getRouteIntersectionOptions = \
             self.myEdgeDataExtractor.getEdgeToInsersectionDict()
@@ -206,12 +203,25 @@ class RouteAnalysis:
                 # one before last edge has a edge as
                 # one of the destionation
                 # two edge sets have to be removed.
-                self.processDecisionWeightsForEdges(
+                temp = self.processDecisionWeightsForEdges(
                     DecisionEdgeCenters[i],
                     DecisionEdgeLinEqs[i],
                     self.currentEdgeCenters[-1],
                     True,
                     i)
+                RouteEdgetoAdyacentEdges.setdefault(self.Route_Edges[i], [])
+                RouteEdgetoAdyacentEdges[self.Route_Edges[i]].append(temp)
+        print(RouteEdgetoAdyacentEdges)
+
+    def setTestMode(self):
+        # print('Test Mode Started')
+        # print(self.currentEdgeCenters)
+        self.processDecisionWeightsForEdges(
+            self.currentEdgeCenters,
+            self.currentEdgeLinearEquation,
+            self.currentEdgeCenters[-1])
+
+        self.getAdyacentAngleWeight()
 
     def __findVectorDirection(self,
                               EdgeCenters,
