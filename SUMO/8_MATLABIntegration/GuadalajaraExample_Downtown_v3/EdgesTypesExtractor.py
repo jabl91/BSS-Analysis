@@ -159,6 +159,27 @@ class EdgeTypesExtractor:
         # print(EdgeToEdgeConnection)
         return EdgeToEdgeConnection
 
+    def getEdgeToIntersection_DestType(self):
+        DestTypes = {
+            'T': 'UTurn',
+            'l': 'LTurn',
+            'r': 'RTurn',
+            's': 'straight',
+            'R': 'RTurn',
+            'L': 'LTurn'}
+
+        EdgeToEdgeDstType = {}
+        for myRoadConnection in self.__getRoot().iter('connection'):
+            currentRoad = myRoadConnection.attrib.get('from')
+            DstType = myRoadConnection.attrib.get('dir')
+            EdgeToEdgeDstType.setdefault(currentRoad, [])
+            EdgeToEdgeDstType[currentRoad].append(DestTypes[DstType])
+            # if(currentRoad in EdgeToEdgeConnection.keys()):
+            #    EdgeToEdgeConnection[currentRoad] = \
+            #        [EdgeToEdgeConnection[currentRoad], destinationRoad]
+        # print(EdgeToEdgeConnection)
+        return EdgeToEdgeDstType
+
 
 # treeNet = ET.parse('osm.net.xml')
 myExtractor = EdgeTypesExtractor('osm.net.xml')
