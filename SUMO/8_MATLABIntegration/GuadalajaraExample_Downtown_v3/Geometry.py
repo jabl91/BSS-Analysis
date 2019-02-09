@@ -49,6 +49,10 @@ class GeometryClass:
         return traciBoundary_Y
 
     def getAngleBetweenVectors(self, Vector1, Vector2, ref=[0, 0]):
+        # print('\ngetAngleBetweenVectors')
+        # print(Vector1)
+        # print(Vector2)
+        # print(ref)
 
         Vector1 = [float(i) for i in Vector1]
         Vector2 = [float(i) for i in Vector2]

@@ -70,12 +70,12 @@ class RouteAnalysis:
         # print(self.LaneToEdge[self.AllLanes[0]])
         # input('Press Enter to continue...')
 
-        myEdgeDataExtractor = EdgeTypesExtractor('osm.net.xml')
+        self.myEdgeDataExtractor = EdgeTypesExtractor('osm.net.xml')
 
         self.EdgetoEdgeType = \
-            myEdgeDataExtractor.getEdgeTypeDict()
+            self.myEdgeDataExtractor.getEdgeTypeDict()
         self.EdgetoEdgeCenter, self.EdgeLinearEquation = \
-            myEdgeDataExtractor.getCenterofEdgeDict()
+            self.myEdgeDataExtractor.getCenterofEdgeDict()
         # print(self.EdgeLinearEquation)
 
     def __str__(self):
@@ -120,7 +120,12 @@ class RouteAnalysis:
                 self.currentEdgeLinearEquation.append(
                     self.EdgeLinearEquation[myEdge])
 
-    def getAngleEdgeWeight(self, EdgeCenters, EdgeLinearEq, Destination):
+    def getAngleEdgeWeight(self,
+                           EdgeCenters,
+                           EdgeLinearEq,
+                           Destination,
+                           NotARoute=False,
+                           BaseEdgeIdx=0):
         myGeometryAPI = GeometryClass()
         EdgeAngleWeights = []
 
@@ -129,7 +134,7 @@ class RouteAnalysis:
         # route
 
         VectorPointDirection = self.__findVectorDirection(
-            EdgeCenters, EdgeLinearEq)
+            EdgeCenters, EdgeLinearEq, NotARoute, BaseEdgeIdx)
 
         for i, DirectionPoint in enumerate(VectorPointDirection):
             EdgeAngleWeights.append(myGeometryAPI.getAngleBetweenVectors(
@@ -145,20 +150,85 @@ class RouteAnalysis:
         # input('Press Enter to continue...')
         # print(traci.edge.getIDList())
 
+    def processDecisionWeightsForEdges(
+            self,
+            EdgeCenters,
+            EdgeLinearEqs,
+            Destination,
+            NotARoute=False,
+            BaseEdgeIdx=0):
+
+            AngleEdgeWeights = []
+            AngleEdgeWeights = (self.getAngleEdgeWeight(
+                EdgeCenters,
+                EdgeLinearEqs,
+                Destination,
+                NotARoute,
+                BaseEdgeIdx))
+            # print('\n\nThe angle weights are:')
+            # print(AngleEdgeWeights)
+            # print('\n\n')
+
     def setTestMode(self):
-        print(self.getAngleEdgeWeight(
+        # print('Test Mode Started')
+        # print(self.currentEdgeCenters)
+        self.processDecisionWeightsForEdges(
             self.currentEdgeCenters,
             self.currentEdgeLinearEquation,
-            self.currentEdgeCenters[-1]))
+            self.currentEdgeCenters[-1])
 
-    def __findVectorDirection(self, EdgeCenters, EdgeLinEqs):
+        getRouteIntersectionOptions = \
+            self.myEdgeDataExtractor.getEdgeToInsersectionDict()
+
+        DecisionEdgeCenters = []
+        DecisionEdgeLinEqs = []
+        for EdgeinRoute in self.Route_Edges:
+            if (getRouteIntersectionOptions[EdgeinRoute]):
+                TempEdgeCenter = []
+                TempEdgeLinEq = []
+                for Edge in getRouteIntersectionOptions[EdgeinRoute]:
+                    TempEdgeCenter.append(self.EdgetoEdgeCenter[Edge])
+                    TempEdgeLinEq.append(self.EdgeLinearEquation[Edge])
+
+                DecisionEdgeCenters.append(TempEdgeCenter)
+                DecisionEdgeLinEqs.append(TempEdgeLinEq)
+
+        # print(DecisionEdgeLinEqs)
+        # print(DecisionEdgeCenters)
+        for i, _ in enumerate(DecisionEdgeCenters):
+            # print('\nprocessDecisionWeightsForEdges')
+            # print('La cuenta va en', i)
+            # print(DecisionEdgeCenters[i])
+
+            if (i < (len(DecisionEdgeCenters) - 2)):
+                # print(self.currentEdgeCenters[i+1])
+                # last Edge is destination,
+                # one before last edge has a edge as
+                # one of the destionation
+                # two edge sets have to be removed.
+                self.processDecisionWeightsForEdges(
+                    DecisionEdgeCenters[i],
+                    DecisionEdgeLinEqs[i],
+                    self.currentEdgeCenters[-1],
+                    True,
+                    i)
+
+    def __findVectorDirection(self,
+                              EdgeCenters,
+                              EdgeLinEqs,
+                              NotARoute=False,
+                              BaseEdgeIdx=0):
         myGeometryAPI = GeometryClass()
         eval_val = myGeometryAPI.getBoundary_Y()
         len_EC = len(EdgeCenters)
         VectorPointDirection = []
         for i, EdgeCenter in enumerate(EdgeCenters):
-            if((len_EC - 1) > i):
+            # print(EdgeCenter)
+            if(((len_EC - 1) > i) and (not NotARoute)):
                 # Find the closest value to point to find vector direction
+                # From the current value of X, two Y's will be calculated
+                # by substracting and adding the largestvalue vertical value
+                # of the map (chosen arbitrarily)
                 x_rng = \
                         [(eval_val*(-1)) + float(EdgeCenter[0]),
                          eval_val + float(EdgeCenter[0])]
@@ -168,6 +238,13 @@ class RouteAnalysis:
 
                 y_pos = \
                     ((EdgeLinEqs[i][0])*x_rng[1]) + EdgeLinEqs[i][1]
+
+                # The distance between that far point will be calculated
+                # for the next point on route, this will allow to
+                # discriminate which distant point is the closest to
+                # the destination point. This distant point will be returned
+                # in order to build the Vector of the origin point
+                # (The current EdgeCenter iteration variable))
 
                 neg_dist = myGeometryAPI.getDistance(
                     [x_rng[0], y_neg],
@@ -182,17 +259,64 @@ class RouteAnalysis:
                 else:
                     distantVectorPoint = [x_rng[1], y_pos]
 
+                # A list will be created with all the DistantVectorPoints
+                # that are related to the EdgeCenters input list
+
                 VectorPointDirection.append(distantVectorPoint)
-                angleBetweenEdges = \
-                    myGeometryAPI.getAngleBetweenVectors(
-                        distantVectorPoint,
-                        [float(EdgeCenters[i+1][0]),
-                         float(EdgeCenters[i+1][1])],
-                        [float(EdgeCenter[0]),
-                         float(EdgeCenter[1])])
+                # angleBetweenEdges = \
+                #    myGeometryAPI.getAngleBetweenVectors(
+                #        distantVectorPoint,
+                #        [float(EdgeCenters[i+1][0]),
+                #         float(EdgeCenters[i+1][1])],
+                #        [float(EdgeCenter[0]),
+                #         float(EdgeCenter[1])])
+            elif (NotARoute):
+                # Find the closest value to point to find vector direction
+                # From the current value of X, two Y's will be calculated
+                # by substracting and adding the largestvalue vertical value
+                # of the map (chosen arbitrarily)
+                x_rng = \
+                    [(eval_val*(-1)) +
+                     float(EdgeCenter[0]),
+                     eval_val +
+                     float(EdgeCenter[0])]
+
+                y_neg = \
+                    ((EdgeLinEqs[i][0])*x_rng[0]) +\
+                    EdgeLinEqs[i][1]
+
+                y_pos = \
+                    ((EdgeLinEqs[i][0])*x_rng[1]) +\
+                    EdgeLinEqs[i][1]
+
+                # The distance between that far point will be calculated
+                # for the next point on route, this will allow to
+                # discriminate which distant point is the closest to
+                # the destination point. This distant point will be returned
+                # in order to build the Vector of the origin point
+                # (The current EdgeCenter iteration variable))
+
+                neg_dist = myGeometryAPI.getDistance(
+                    [x_rng[0], y_neg],
+                    [float(self.currentEdgeCenters[BaseEdgeIdx][0]),
+                     float(self.currentEdgeCenters[BaseEdgeIdx][1])])
+
+                pos_dist = myGeometryAPI.getDistance(
+                    [x_rng[1], y_pos],
+                    [float(self.currentEdgeCenters[BaseEdgeIdx][0]),
+                     float(self.currentEdgeCenters[BaseEdgeIdx][1])])
+
+                if(neg_dist > pos_dist):
+                    distantVectorPoint = [x_rng[0], y_neg]
+                else:
+                    distantVectorPoint = [x_rng[1], y_pos]
+
+                # A list will be created with all the DistantVectorPoints
+                # that are related to the EdgeCenters input list
+
+                VectorPointDirection.append(distantVectorPoint)
 
         return VectorPointDirection
-                # print(angleBetweenEdges)
 
     # def __setattr__(self, name, value):
         # print(bcolors.WARNING + 'ERROR: The attribute ' +
