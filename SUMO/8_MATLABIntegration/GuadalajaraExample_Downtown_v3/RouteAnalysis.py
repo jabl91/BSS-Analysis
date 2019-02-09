@@ -173,9 +173,14 @@ class RouteAnalysis:
 
     def getAdyacentAngleWeight(self):
         RouteEdgetoAdyacentEdges = {}
+        RouteEdgeToAdjEdgeTypes = {}
+        RouteEdgeToDecisionEdges = {}
 
         getRouteIntersectionOptions = \
             self.myEdgeDataExtractor.getEdgeToInsersectionDict()
+
+        getRouteIntersectionDstTypes = \
+            self.myEdgeDataExtractor.getEdgeToIntersection_DestType()
 
         DecisionEdgeCenters = []
         DecisionEdgeLinEqs = []
@@ -183,13 +188,23 @@ class RouteAnalysis:
             if (getRouteIntersectionOptions[EdgeinRoute]):
                 TempEdgeCenter = []
                 TempEdgeLinEq = []
+                TempEdgeDecision = []
+
                 for Edge in getRouteIntersectionOptions[EdgeinRoute]:
                     TempEdgeCenter.append(self.EdgetoEdgeCenter[Edge])
                     TempEdgeLinEq.append(self.EdgeLinearEquation[Edge])
+                    TempEdgeDecision.append(Edge)
 
                 DecisionEdgeCenters.append(TempEdgeCenter)
                 DecisionEdgeLinEqs.append(TempEdgeLinEq)
 
+                RouteEdgeToAdjEdgeTypes.setdefault(EdgeinRoute, [])
+                RouteEdgeToAdjEdgeTypes[EdgeinRoute].append(
+                    getRouteIntersectionDstTypes[EdgeinRoute])
+
+                RouteEdgeToDecisionEdges.setdefault(EdgeinRoute, [])
+                RouteEdgeToDecisionEdges[EdgeinRoute].append(
+                    TempEdgeDecision)
         # print(DecisionEdgeLinEqs)
         # print(DecisionEdgeCenters)
         for i, _ in enumerate(DecisionEdgeCenters):
@@ -211,7 +226,10 @@ class RouteAnalysis:
                     i)
                 RouteEdgetoAdyacentEdges.setdefault(self.Route_Edges[i], [])
                 RouteEdgetoAdyacentEdges[self.Route_Edges[i]].append(temp)
+
+        print(RouteEdgeToDecisionEdges)
         print(RouteEdgetoAdyacentEdges)
+        print(RouteEdgeToAdjEdgeTypes)
 
     def setTestMode(self):
         # print('Test Mode Started')
