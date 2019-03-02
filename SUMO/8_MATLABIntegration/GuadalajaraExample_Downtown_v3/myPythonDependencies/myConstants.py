@@ -7,7 +7,7 @@
 # @version $Id$
 
 
-class myConstants:
+class myConsts:
 
     RIGHT = -1.32893
     LEFT = -1.47166
@@ -22,10 +22,35 @@ class myConstants:
     E_BUT = -1.021367
 
     ANGLE_TO_DESTINATION = 20.0
-    AVOID_U_TURN = 0.0
+    AVOID_U_TURN = 1.0
     EXCEPT_U_TURN = True
 
     AVOID_ALREADY_VISITED = True
 
     CROWDING = 0
     GOODBAD = 0.0
+
+    PROCESS_WEIGHTS_ORDERED_CONST = [
+        ANGLE_TO_DESTINATION,
+        AVOID_U_TURN,
+        E_TVEJ,
+        E_AND,
+        GROENPCT,
+        CTRACKLANE,
+        AVOID_ALREADY_VISITED,
+        CSTI,
+        CFSTI,
+        E_LVEJ,
+        E_BUT,
+        1.0,    # Combined Left and Right
+        # LEFT,
+        # RIGHT,
+        E_HOJ]
+
+    DEST_TYPES = {
+        'T': 'UTurn',
+        'l': 'LTurn',
+        'r': 'RTurn',
+        's': 'straight',
+        'R': 'RTurn',
+        'L': 'LTurn'}

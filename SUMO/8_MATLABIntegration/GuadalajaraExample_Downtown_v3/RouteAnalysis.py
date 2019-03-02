@@ -19,9 +19,9 @@ from __future__ import print_function
 # import optparse
 # import random
 
-from myPythonDependencies.myConstants import myConstants
 from EdgesTypesExtractor import EdgeTypesExtractor
 from Geometry import GeometryClass
+from DecisionMatrix import DecisionMatrix
 
 import traci
 
@@ -172,8 +172,22 @@ class RouteAnalysis:
             # print('\n\n')
 
     def getAdyacentAngleWeight(self):
+        # This dictionary returns the angle weights of each of the edges
+        # that can be part of the decision matrix when a route is selected
+        # An angle weight is the angle between two vector that are formed
+        # between the current analyzed edge and the vector from that edge
+        # center to the final destination of the route
         RouteEdgetoAdyacentEdges = {}
+
+        # This dictionary returns a list of the turn direction
+        # of a edge in case a certain local destination edge is chosen
+        # A local destination edge means such edges that are outlets of the
+        # intersection where the input edge is being analyzed
         RouteEdgeToAdjEdgeTypes = {}
+
+        # This dictionary returns a list of all the names of the edges that
+        # are being analyzed within this function. The number of elements
+        # in each list is the same as in the other dictionaries.
         RouteEdgeToDecisionEdges = {}
 
         getRouteIntersectionOptions = \
@@ -231,7 +245,11 @@ class RouteAnalysis:
         print(RouteEdgetoAdyacentEdges)
         print(RouteEdgeToAdjEdgeTypes)
 
-    def setTestMode(self):
+        return RouteEdgeToDecisionEdges,\
+            RouteEdgetoAdyacentEdges,\
+            RouteEdgeToAdjEdgeTypes
+
+    def RA_mainFunction(self):
         # print('Test Mode Started')
         # print(self.currentEdgeCenters)
         self.processDecisionWeightsForEdges(
@@ -239,7 +257,26 @@ class RouteAnalysis:
             self.currentEdgeLinearEquation,
             self.currentEdgeCenters[-1])
 
-        self.getAdyacentAngleWeight()
+        EdgesIdx, EdgesAngle, EdgesTurnDirection = \
+            self.getAdyacentAngleWeight()
+
+        myDecisionMatrix = DecisionMatrix()
+        myDecisionMatrix.ProcessWeights(
+            EdgesIdx,                               # EdgeIdx
+            EdgesAngle,                             # ANGL_DEST
+            False,                                  # avoid_u_turn
+            False,                                  # E_TVEJ
+            False,                                  # E_AND
+            False,                                  # GROENPCT
+            False,                                  # CTRACKLANE
+            False,                                  # avoid_already_visited
+            False,                                  # CSTI
+            False,                                  # CFSTI
+            False,                                  # E_LVEJ
+            False,                                  # E_BUT
+            EdgesTurnDirection,                     # Turn Direction
+            self.getAllEdges()                      # Current Route Edges
+            )
 
     def __findVectorDirection(self,
                               EdgeCenters,

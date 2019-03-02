@@ -134,7 +134,7 @@ def run():
                 myRouteAnalysis.setCurrentRoute(myCurrentRoutes[0])
                 # print(myRouteAnalysis.getCurrentRoute())
                 # print(myRouteAnalysis.getAllEdges())
-                myRouteAnalysis.setTestMode()
+                myRouteAnalysis.RA_mainFunction()
 
             # print(traci.vehicletype.getIDList())
     traci.close()

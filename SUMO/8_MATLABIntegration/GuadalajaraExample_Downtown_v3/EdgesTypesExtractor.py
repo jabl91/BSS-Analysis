@@ -3,6 +3,7 @@ from __future__ import print_function
 import xml.etree.ElementTree as ET
 
 import traci
+from myPythonDependencies.myConstants import myConsts
 from Geometry import GeometryClass
 
 class EdgeTypesExtractor:
@@ -160,20 +161,13 @@ class EdgeTypesExtractor:
         return EdgeToEdgeConnection
 
     def getEdgeToIntersection_DestType(self):
-        DestTypes = {
-            'T': 'UTurn',
-            'l': 'LTurn',
-            'r': 'RTurn',
-            's': 'straight',
-            'R': 'RTurn',
-            'L': 'LTurn'}
 
         EdgeToEdgeDstType = {}
         for myRoadConnection in self.__getRoot().iter('connection'):
             currentRoad = myRoadConnection.attrib.get('from')
             DstType = myRoadConnection.attrib.get('dir')
             EdgeToEdgeDstType.setdefault(currentRoad, [])
-            EdgeToEdgeDstType[currentRoad].append(DestTypes[DstType])
+            EdgeToEdgeDstType[currentRoad].append(myConsts.DEST_TYPES[DstType])
             # if(currentRoad in EdgeToEdgeConnection.keys()):
             #    EdgeToEdgeConnection[currentRoad] = \
             #        [EdgeToEdgeConnection[currentRoad], destinationRoad]
