@@ -16,12 +16,14 @@ from __future__ import print_function
 from myPythonDependencies.myConstants import myConsts
 import os
 import math
+import random
 
 
 class DecisionMatrix:
 
     def __init__(self):
-        print('This is the Decision Matrix Class')
+        self.initFlag = True
+        # print('This is the Decision Matrix Class')
 
     def MultinomialRegression(self, DecisionVector):
         VectorDimension = \
@@ -31,8 +33,8 @@ class DecisionMatrix:
             for j, value in enumerate(DecisionVector[element][0]):
                 SumOfElements[j] = SumOfElements[j] + value
 
-        print('The sum of elements is')
-        print(SumOfElements)
+        # print('The sum of elements is')
+        # print(SumOfElements)
 
         return SumOfElements
 
@@ -48,7 +50,7 @@ class DecisionMatrix:
                                      Prob_divisor)
         else:
             Probabilities.append(1.0)
-        print(Probabilities)
+        # print(Probabilities)
         return Probabilities
 
     def calculateFinalProbability(self, ProbVector):
@@ -60,9 +62,17 @@ class DecisionMatrix:
                     Prob_divisor += element
                 FinalProb.append(ProbVector[j] /
                                  Prob_divisor)
-            print(FinalProb)
+            # print(FinalProb)
         else:
             FinalProb.append(1.0)
+        return FinalProb
+
+    def StochasticSelection(self, ProbVector):
+        MyVector = list(range(0, len(ProbVector)))
+        myChoice = random.choices(MyVector, weights=ProbVector)
+        # print(myChoice[0])
+        return myChoice[0]
+
 
     def ProcessWeights(
             self,
@@ -146,13 +156,19 @@ class DecisionMatrix:
                             BalancedWeights.setdefault('DM_'+str(i), [])
                             BalancedWeights['DM_'+str(i)].append(Values)
                     AllBalancedWeights.append(BalancedWeights)
-            print(AllBalancedWeights)
-            print('Done')
+            # print(AllBalancedWeights)
+            # print('Done')
 
+            myChoices = []
             for i, element in enumerate(AllBalancedWeights):
 
-                print('CurrentElement is ' + str(i))
-                print(element)
+                # print('CurrentElement is ' + str(i))
+                # print(element)
                 ElementsSum = self.MultinomialRegression(element)
                 Probabilities = self.calculateProbability(ElementsSum)
-                self.calculateFinalProbability(Probabilities)
+                FinalProbSet = self.calculateFinalProbability(Probabilities)
+                myChoice = self.StochasticSelection(FinalProbSet)
+                myChoices.append(myChoice)
+
+            # print(myChoices)
+            return myChoices

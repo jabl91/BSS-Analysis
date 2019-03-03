@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 03/02/19 17:42:15 by Eclipse SUMO GUI Version 1.1.0
+<!-- generated on 03/03/19 11:07:11 by Eclipse SUMO GUI Version 1.1.0
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
@@ -39,7 +39,7 @@
     </report>
 
     <traci_server>
-        <remote-port value="60598"/>
+        <remote-port value="59058"/>
     </traci_server>
 
     <gui_only>
@@ -65,7 +65,4 @@
     <tripinfo id="bike_0.2.2" depart="55.60" departLane="-119417247#3_0" departPos="22.62" departPosLat="0.00" departSpeed="0.00" departDelay="-0.05" arrival="68.50" arrivalLane="-119417247#3_0" arrivalPos="75.94" arrivalPosLat="0.00" arrivalSpeed="5.03" duration="12.90" routeLength="53.32" waitingTime="0.00" waitingCount="0" stopTime="0.00" timeLoss="3.21" rerouteNo="0" devices="tripinfo_bike_0.2.2 routing_bike_0.2.2" vType="bike" speedFactor="1.12" vaporized=""/>
     <tripinfo id="bike_3.0" depart="0.70" departLane="167280591#13_0" departPos="107.57" departPosLat="0.00" departSpeed="0.00" departDelay="-0.09" arrival="130.20" arrivalLane="-119417247#3_0" arrivalPos="75.94" arrivalPosLat="0.00" arrivalSpeed="5.22" duration="129.50" routeLength="662.00" waitingTime="0.00" waitingCount="0" stopTime="0.00" timeLoss="10.26" rerouteNo="0" devices="tripinfo_bike_3.0 routing_bike_3.0" vType="bike" speedFactor="1.06" vaporized=""/>
     <tripinfo id="bike_3.0.1" depart="0.70" departLane="167280591#13_0" departPos="86.02" departPosLat="0.00" departSpeed="0.00" departDelay="-0.09" arrival="134.80" arrivalLane="-119417247#3_0" arrivalPos="75.94" arrivalPosLat="0.00" arrivalSpeed="5.27" duration="134.10" routeLength="683.55" waitingTime="0.00" waitingCount="0" stopTime="0.00" timeLoss="10.96" rerouteNo="0" devices="tripinfo_bike_3.0.1 routing_bike_3.0.1" vType="bike" speedFactor="0.94" vaporized=""/>
-    <tripinfo id="bike_3.1.2" depart="13.50" departLane="167280591#13_0" departPos="108.74" departPosLat="0.00" departSpeed="0.00" departDelay="-0.06" arrival="142.80" arrivalLane="-119417247#3_0" arrivalPos="75.94" arrivalPosLat="0.00" arrivalSpeed="5.06" duration="129.30" routeLength="660.83" waitingTime="0.00" waitingCount="0" stopTime="0.00" timeLoss="10.24" rerouteNo="0" devices="tripinfo_bike_3.1.2 routing_bike_3.1.2" vType="bike" speedFactor="1.04" vaporized=""/>
-    <tripinfo id="bike_3.1" depart="13.50" departLane="167280591#13_0" departPos="101.06" departPosLat="0.00" departSpeed="0.00" departDelay="-0.06" arrival="144.10" arrivalLane="-119417247#3_0" arrivalPos="75.94" arrivalPosLat="0.00" arrivalSpeed="5.17" duration="130.60" routeLength="668.51" waitingTime="0.00" waitingCount="0" stopTime="0.00" timeLoss="10.24" rerouteNo="0" devices="tripinfo_bike_3.1 routing_bike_3.1" vType="bike" speedFactor="1.09" vaporized=""/>
-    <tripinfo id="bike_3.0.2" depart="0.70" departLane="167280591#13_0" departPos="5.49" departPosLat="0.00" departSpeed="0.00" departDelay="-0.09" arrival="150.60" arrivalLane="-119417247#3_0" arrivalPos="75.94" arrivalPosLat="0.00" arrivalSpeed="5.16" duration="149.90" routeLength="764.08" waitingTime="0.00" waitingCount="0" stopTime="0.00" timeLoss="12.32" rerouteNo="0" devices="tripinfo_bike_3.0.2 routing_bike_3.0.2" vType="bike" speedFactor="1.01" vaporized=""/>
-    <tripinfo id="bike_3.1.1" depart="13.50" departLane="167280591#13_0" departPo
+</tripinfos>

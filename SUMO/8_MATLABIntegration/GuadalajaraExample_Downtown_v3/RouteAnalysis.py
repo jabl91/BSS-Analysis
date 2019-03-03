@@ -241,9 +241,9 @@ class RouteAnalysis:
                 RouteEdgetoAdyacentEdges.setdefault(self.Route_Edges[i], [])
                 RouteEdgetoAdyacentEdges[self.Route_Edges[i]].append(temp)
 
-        print(RouteEdgeToDecisionEdges)
-        print(RouteEdgetoAdyacentEdges)
-        print(RouteEdgeToAdjEdgeTypes)
+        # print(RouteEdgeToDecisionEdges)
+        # print(RouteEdgetoAdyacentEdges)
+        # print(RouteEdgeToAdjEdgeTypes)
 
         return RouteEdgeToDecisionEdges,\
             RouteEdgetoAdyacentEdges,\
@@ -261,7 +261,7 @@ class RouteAnalysis:
             self.getAdyacentAngleWeight()
 
         myDecisionMatrix = DecisionMatrix()
-        myDecisionMatrix.ProcessWeights(
+        EdgeChoices = myDecisionMatrix.ProcessWeights(
             EdgesIdx,                               # EdgeIdx
             EdgesAngle,                             # ANGL_DEST
             False,                                  # avoid_u_turn
@@ -277,6 +277,13 @@ class RouteAnalysis:
             EdgesTurnDirection,                     # Turn Direction
             self.getAllEdges()                      # Current Route Edges
             )
+
+        print('The predifined route is')
+        print(self.getAllEdges())
+        print('The stochastic selection of routes is')
+        for i, edge in enumerate(self.getAllEdges()):
+            if i < len(EdgeChoices):
+                print(EdgesIdx[edge][0][EdgeChoices[i]])
 
     def __findVectorDirection(self,
                               EdgeCenters,
