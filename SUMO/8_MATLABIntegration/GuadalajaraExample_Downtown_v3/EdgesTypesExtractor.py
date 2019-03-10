@@ -169,7 +169,8 @@ class EdgeTypesExtractor:
     #  the netFile. Instead of creating a dictionary during runtime,
     #  an already defined table #DECISION_CONVER_DICT is used to create
     #  a dictionary that maps the name of the edge to its corresponding
-    #  agent model edge descriptor.
+    #  agent model edge descriptor (cycleway, cyclepath, residential,
+    #  path, etc.)
     def getEdgeTypeDict(self):
         # self.findAllAvailableTypes()
         EdgeToEdgeType = {}

@@ -1,12 +1,14 @@
-# This file contains constans that are going to be used
+# @package myConstants
+# This package contains constans that are going to be used
 # throug the complete project
-
 # @file    myConstants.py
 # @author  Alberto Briseno
 # @date    2019-01-21
 # @version $Id$
 
 
+## This class contains the constants that are needed by the other modules
+#  on this project
 class myConsts:
 
     RIGHT = -1.32893
