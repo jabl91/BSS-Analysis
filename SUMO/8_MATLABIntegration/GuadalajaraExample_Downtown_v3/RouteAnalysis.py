@@ -99,7 +99,7 @@ class RouteAnalysis:
         #  This is an object from #EdgeTypesExtractor class which
         #  uses the 'osm.net.xml' to get all information related to current
         #  simulation network
-        self.myEdgeDataExtractor = EdgeTypesExtractor('osm.net.xml')
+        self.myEdgeDataExtractor = EdgeTypesExtractor('main.net.xml')
 
         ## @var EdgetoEdgeType
         #  This attribute obtains a dictionary which maps the name of the
@@ -298,15 +298,15 @@ class RouteAnalysis:
             NotARoute=False,
             BaseEdgeIdx=0):
 
-            AngleEdgeWeights = []
-            AngleEdgeWeights = (self.getAngleEdgeWeight(
-                EdgeCenters,
-                EdgeLinearEqs,
-                Destination,
-                NotARoute,
-                BaseEdgeIdx))
+        AngleEdgeWeights = []
+        AngleEdgeWeights = (self.getAngleEdgeWeight(
+            EdgeCenters,
+            EdgeLinearEqs,
+            Destination,
+            NotARoute,
+            BaseEdgeIdx))
 
-            return AngleEdgeWeights
+        return AngleEdgeWeights
 
     ## This method retrieves three different dictionaries, one of them is
     #  a dictionary that contains as a key every of the edges that correspond

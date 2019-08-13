@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 08/11/19 18:47:29 by Eclipse SUMO netedit Version 1.2.0
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
+
+    <input>
+        <sumo-net-file value="osm.net.xml"/>
+    </input>
+
+    <output>
+        <output-file value="osm.net.xml"/>
+        <output.street-names value="true"/>
+    </output>
+
+    <processing>
+        <geometry.max-grade.fix value="false"/>
+        <offset.disable-normalization value="true"/>
+        <lefthand value="true"/>
+    </processing>
+
+    <junctions>
+        <no-turnarounds value="true"/>
+        <junctions.corner-detail value="5"/>
+        <junctions.limit-turn-speed value="5.5"/>
+        <rectangular-lane-cut value="false"/>
+    </junctions>
+
+    <pedestrian>
+        <walkingareas value="false"/>
+    </pedestrian>
+
+    <netedit>
+        <additional-files value="c:\git\BSS-Analysis\SUMO\8_MATLABIntegration\GuadalajaraExample_Downtown_v3\TestAdditionals.xml"/>
+    </netedit>
+
+    <visualisation>
+        <registry-viewport value="true"/>
+    </visualisation>
+
+</configuration>
+-->
+
+<additional xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/additional_file.xsd">
+    <poly id="149003543" type="building" color="0,198,255" fill="1" layer="-1.00" shape="3653.330000,5882.910000 3652.790000,5892.500000 3663.640000,5893.030000 3664.350000,5883.720000 3653.510000,5883.000000 3653.330000,5882.910000">
+        <param key="building" value="yes"/>
+        <param key="source" value="Regione Emilia Romagna"/>
+    </poly>
+    <poly id="149893543" type="building" color="255,230,230" fill="1" layer="-1.00" shape="995.18,383.98 997.18,384.24 997.26,383.31 1005.15,383.71 1005.42,378.99 995.49,378.43 995.18,383.98">
+        <param key="building" value="yes"/>
+        <param key="source" value="Regione Emilia Romagna"/>
+    </poly>
+</additional>

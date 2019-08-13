@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 09/25/18 16:10:13 by Eclipse SUMO duarouter Version 1.0.1
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/duarouterConfiguration.xsd">
+
+    <input>
+        <net-file value="osm.net.xml"/>
+        <route-files value="test\test.xml"/>
+    </input>
+
+    <output>
+        <output-file value="MySUMORoutesTest.rou.xml"/>
+        <alternatives-output value="MySUMORoutesTest.rou.alt.xml"/>
+    </output>
+
+    <processing>
+        <unsorted-input value="true"/>
+        <randomize-flows value="true"/>
+    </processing>
+
+    <time>
+        <begin value="0"/>
+        <end value="3000"/>
+    </time>
+
+</configuration>
+-->
+
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+    <vType id="bike" length="0.60" vClass="bicycle" width="0.20"/>
+    <vehicle id="bike_3.0" type="bike" depart="0.79" departPos="random_free">
+        <route edges="167280591#13 298742258#4 122601941#11 431593439#6 431593439#7 119409501#0 -119417247#3"/>
+    </vehicle>
+</routes>
