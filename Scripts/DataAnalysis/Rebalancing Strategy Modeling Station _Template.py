@@ -124,7 +124,7 @@ for DayinYear in SameDaysinYear:
                 print(i['Origen_Id'])
                 print(i['Destino_Id'])
                 break
-            if((NumberOfBikes < int( (Threshold_Action) * NumberofDocks_Station10 )) |                 (NumberOfBikes > int( (1-Threshold_Action) * NumberofDocks_Station10 ))):
+            if((NumberOfBikes <= int( (Threshold_Action) * NumberofDocks_Station10 )) |                 (NumberOfBikes >= int( (1-Threshold_Action) * NumberofDocks_Station10 ))):
                 #print("Camioncito de relocacion")
                 #print("Dejando la estacion al " + str(cur_RebalPerc) + "%")
                 NumberOfBikes = int((cur_RebalPerc*NumberofDocks_Station10) / 100)
@@ -291,6 +291,7 @@ SameDaysinYear
 
 OptimizationWeek = []
 days = np.arange(1,8,1)
+PlotDay = 124
 
 for dayofweek in days:
     OptimizationWeekDay = []
@@ -309,6 +310,9 @@ for dayofweek in days:
 
         ResultsOptimization = []
         
+        if(DayinYear == PlotDay):
+            PlotBikeStationEvents = []
+            
         DayName = SingleDayTrips_Station10['Inicio_del_viaje'].iloc[0].day_name()
 
         for cur_RebalPerc in Rebal_Percent:
@@ -326,14 +330,15 @@ for dayofweek in days:
                     #print(i['Origen_Id'])
                     #print(i['Destino_Id'])
                     break
-                if((NumberOfBikes < int( (Threshold_Action) * NumberofDocks_Station10 )) |                     (NumberOfBikes > int( (1-Threshold_Action) * NumberofDocks_Station10 ))):
+                if((NumberOfBikes <= int( (Threshold_Action) * NumberofDocks_Station10 )) |                     (NumberOfBikes >= int( (1-Threshold_Action) * NumberofDocks_Station10 ))):
                     #print("Camioncito de relocacion")
                     #print("Dejando la estacion al " + str(cur_RebalPerc) + "%")
                     NumberOfBikes = int((cur_RebalPerc*NumberofDocks_Station10) / 100)
                     OptimizationBadEvents+= 1
                 #else:
                     #print("All is gut " + str(NumberOfBikes))
-
+                if(DayinYear == PlotDay):
+                    PlotBikeStationEvents.append(NumberOfBikes)
             ResultsOptimization.append([cur_RebalPerc, OptimizationBadEvents])
         #print(ResultsOptimization)
 
@@ -400,10 +405,30 @@ for optim_day in OptimizationWeek:
     
 
 
-# In[ ]:
+# In[19]:
 
 
+fig = go.Figure()
+#fig.add_trace(go.Scatter(x=np.arange(0,100,1), y=PlotBikeStationEvents[300:400],
+#                    mode='lines+markers',
+#                    name='lines+markers'))
+fig.add_trace(go.Scatter(x=np.arange(0,len(PlotBikeStationEvents),1), y=PlotBikeStationEvents,
+                    mode='lines+markers',
+                    name='lines+markers'))
+fig.show();
 
+
+# In[20]:
+
+
+Test =             AllTrips_Station10_2[AllTrips_Station10_2['Inicio_del_viaje'].dt.dayofyear == PlotDay]
+Test
+
+
+# In[18]:
+
+
+len(PlotBikeStationEvents)
 
 
 # In[ ]:
