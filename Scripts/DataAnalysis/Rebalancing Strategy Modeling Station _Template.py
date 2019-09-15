@@ -37,7 +37,8 @@ from scipy.io import loadmat
 # Read data from file 'filename.csv' 
 # (in the same directory that your python process is based)
 # Control delimiters, rows, column names with read_csv (see later) 
-NumeroEstacion = 32
+NumeroEstacion = 10
+NumberofDocks_Station10 = 15
 data = pd.read_csv("InfoStation"+str(NumeroEstacion)+".csv")
 # Preview the first 5 lines of the loaded data 
 data.head()
@@ -99,8 +100,6 @@ OptimizationWeekDay = []
 Rebal_Percent = np.arange(0,100,10); 
 #Percentage 0.00 to 0.50 #When should the relocation team approach the station
 Threshold_Action = 0.10; 
-
-NumberofDocks_Station10 = 15
 
 for DayinYear in SameDaysinYear:
 
@@ -287,7 +286,7 @@ SameDaysinYear = np.arange(DayOfTheWeek,365,7)
 SameDaysinYear
 
 
-# In[ ]:
+# In[14]:
 
 
 OptimizationWeek = []
@@ -301,8 +300,6 @@ for dayofweek in days:
     Rebal_Percent = np.arange(0,100,10); 
     #Percentage 0.00 to 0.50 #When should the relocation team approach the station
     Threshold_Action = 0.10; 
-
-    NumberofDocks_Station10 = 15
 
     for DayinYear in SameDaysinYear:
 
@@ -381,7 +378,7 @@ for dayofweek in days:
     OptimizationWeek.append(OptimizationWeekDay)
 
 
-# In[ ]:
+# In[15]:
 
 
 for optim_day in OptimizationWeek:
