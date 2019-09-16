@@ -290,12 +290,12 @@ SameDaysinYear
 
 
 OptimizationWeek = []
-days = np.arange(1,8,1)
+days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
 PlotDay = 124
 
 for dayofweek in days:
     OptimizationWeekDay = []
-    SameDaysinYear = np.arange(dayofweek,365,7)
+    SameDaysinYear = np.arange(1,365,1)
     
     #Percentage 0 to 100 #Final State of the Bike Station after Rebal event
     Rebal_Percent = np.arange(0,100,10); 
@@ -305,81 +305,84 @@ for dayofweek in days:
     for DayinYear in SameDaysinYear:
 
         SingleDayTrips_Station10 =             AllTrips_Station10_2[AllTrips_Station10_2['Inicio_del_viaje'].dt.dayofyear == DayinYear]
-
-        #SingleDayTrips_Station10
-
-        ResultsOptimization = []
         
-        if(DayinYear == PlotDay):
-            PlotBikeStationEvents = []
-            
         DayName = SingleDayTrips_Station10['Inicio_del_viaje'].iloc[0].day_name()
+        if(DayName == dayofweek):
 
-        for cur_RebalPerc in Rebal_Percent:
+            #SingleDayTrips_Station10
 
-            OptimizationBadEvents = 0
-            NumberOfBikes = int((cur_RebalPerc*NumberofDocks_Station10)/100)
+            ResultsOptimization = []
 
-            for _, i in SingleDayTrips_Station10.iterrows():
-                if((i['Origen_Id'] == NumeroEstacion) & (i['Destino_Id'] != NumeroEstacion)):
-                    NumberOfBikes-=1;
-                elif((i['Destino_Id'] == NumeroEstacion) & (i['Origen_Id'] != NumeroEstacion)):
-                    NumberOfBikes+=1
-                else:
-                    #print("Algo anda mal")
-                    #print(i['Origen_Id'])
-                    #print(i['Destino_Id'])
-                    break
-                if((NumberOfBikes <= int( (Threshold_Action) * NumberofDocks_Station10 )) |                     (NumberOfBikes >= int( (1-Threshold_Action) * NumberofDocks_Station10 ))):
-                    #print("Camioncito de relocacion")
-                    #print("Dejando la estacion al " + str(cur_RebalPerc) + "%")
-                    NumberOfBikes = int((cur_RebalPerc*NumberofDocks_Station10) / 100)
-                    OptimizationBadEvents+= 1
-                #else:
-                    #print("All is gut " + str(NumberOfBikes))
-                if(DayinYear == PlotDay):
-                    PlotBikeStationEvents.append(NumberOfBikes)
-            ResultsOptimization.append([cur_RebalPerc, OptimizationBadEvents])
-        #print(ResultsOptimization)
+            if(DayinYear == PlotDay):
+                PlotBikeStationEvents = []
 
-        Percentage = ResultsOptimization[0][0]
-        MinNumberofBadEvents = ResultsOptimization[0][1]
-        SameEvents = []
-        SameEventPercentages = []
-        for i, badevents in ResultsOptimization:  
-            if(MinNumberofBadEvents >= badevents):
-                MinNumberofBadEvents = badevents
-                Percentage = i
-                if(len(SameEvents) != 0):
-                    if(SameEvents[-1] == badevents):
+
+
+            for cur_RebalPerc in Rebal_Percent:
+
+                OptimizationBadEvents = 0
+                NumberOfBikes = int((cur_RebalPerc*NumberofDocks_Station10)/100)
+
+                for _, i in SingleDayTrips_Station10.iterrows():
+                    if((i['Origen_Id'] == NumeroEstacion) & (i['Destino_Id'] != NumeroEstacion)):
+                        NumberOfBikes-=1;
+                    elif((i['Destino_Id'] == NumeroEstacion) & (i['Origen_Id'] != NumeroEstacion)):
+                        NumberOfBikes+=1
+                    else:
+                        #print("Algo anda mal")
+                        #print(i['Origen_Id'])
+                        #print(i['Destino_Id'])
+                        break
+                    if((NumberOfBikes <= int( (Threshold_Action) * NumberofDocks_Station10 )) |                         (NumberOfBikes >= int( (1-Threshold_Action) * NumberofDocks_Station10 ))):
+                        #print("Camioncito de relocacion")
+                        #print("Dejando la estacion al " + str(cur_RebalPerc) + "%")
+                        NumberOfBikes = int((cur_RebalPerc*NumberofDocks_Station10) / 100)
+                        OptimizationBadEvents+= 1
+                    #else:
+                        #print("All is gut " + str(NumberOfBikes))
+                    if(DayinYear == PlotDay):
+                        PlotBikeStationEvents.append(NumberOfBikes)
+                ResultsOptimization.append([cur_RebalPerc, OptimizationBadEvents])
+            #print(ResultsOptimization)
+
+            Percentage = ResultsOptimization[0][0]
+            MinNumberofBadEvents = ResultsOptimization[0][1]
+            SameEvents = []
+            SameEventPercentages = []
+            for i, badevents in ResultsOptimization:  
+                if(MinNumberofBadEvents >= badevents):
+                    MinNumberofBadEvents = badevents
+                    Percentage = i
+                    if(len(SameEvents) != 0):
+                        if(SameEvents[-1] == badevents):
+                            SameEvents.append(badevents)
+                            SameEventPercentages.append(i)
+                        else:
+                            SameEvents = [badevents]
+                            SameEventPercentages = [i]
+                    else:
                         SameEvents.append(badevents)
                         SameEventPercentages.append(i)
-                    else:
-                        SameEvents = [badevents]
-                        SameEventPercentages = [i]
-                else:
-                    SameEvents.append(badevents)
-                    SameEventPercentages.append(i)
 
-        Average = 0
-        for per in SameEventPercentages:
-            Average += per
-        if(len(SameEventPercentages) != 0):    
-            Average = Average / len(SameEventPercentages)
-        #print("The optimal percentage of bikes to start is: "+ str(Percentage))
-        #print("The number of relocations needed were:", MinNumberofBadEvents)
+            Average = 0
+            for per in SameEventPercentages:
+                Average += per
+            if(len(SameEventPercentages) != 0):    
+                Average = Average / len(SameEventPercentages)
+            #print("The optimal percentage of bikes to start is: "+ str(Percentage))
+            #print("The number of relocations needed were:", MinNumberofBadEvents)
 
-        #OptimizationWeekDay Description:
+            #OptimizationWeekDay Description:
 
-        #[0]DayinYear corresponds to Monday, Tuesday, Wednesday, etc
-        #[1]SameEventPercentages is an array with all the percentages that matched the MinNumberofBadEvents
-        #[2]Average is the average of all the elements in SameEventPercentages
-        #[3]Percentage is the maximum of SameEvent Percentages
-        #[4]MinNumberofBadEvents is the minimum number of bike relocation events for every element of rebalancing
-        #    percentages on SameEventPercentages
+            #[0]DayinYear corresponds to Monday, Tuesday, Wednesday, etc
+            #[1]SameEventPercentages is an array with all the percentages that matched the MinNumberofBadEvents
+            #[2]Average is the average of all the elements in SameEventPercentages
+            #[3]Percentage is the maximum of SameEvent Percentages
+            #[4]MinNumberofBadEvents is the minimum number of bike relocation events for every element of rebalancing
+            #    percentages on SameEventPercentages
 
-        OptimizationWeekDay.append([DayinYear,SameEventPercentages,Average,Percentage,MinNumberofBadEvents,DayName])
-        
+            OptimizationWeekDay.append([DayinYear,SameEventPercentages,Average,Percentage,MinNumberofBadEvents,DayName])
+
     OptimizationWeek.append(OptimizationWeekDay)
 
 
@@ -405,20 +408,26 @@ for optim_day in OptimizationWeek:
     
 
 
-# In[19]:
+# In[31]:
 
 
+NumData = np.arange(0,120*5,1)
+Threshold = 12
+EventsStart = 120
 fig = go.Figure()
-#fig.add_trace(go.Scatter(x=np.arange(0,100,1), y=PlotBikeStationEvents[300:400],
-#                    mode='lines+markers',
-#                    name='lines+markers'))
-fig.add_trace(go.Scatter(x=np.arange(0,len(PlotBikeStationEvents),1), y=PlotBikeStationEvents,
+fig.add_trace(go.Scatter(x=NumData, y=PlotBikeStationEvents[EventsStart:EventsStart+len(NumData)],
                     mode='lines+markers',
-                    name='lines+markers'))
+                    name='Bikes in Station'))
+fig.add_trace(go.Scatter(x=NumData, y=np.ones(len(NumData))*Threshold,
+                    mode='lines',
+                    name='Upper Threshold'))
+#fig.add_trace(go.Scatter(x=np.arange(0,len(PlotBikeStationEvents),1), y=PlotBikeStationEvents,
+#                   mode='lines+markers',
+#                    name='lines+markers'))
 fig.show();
 
 
-# In[20]:
+# In[17]:
 
 
 Test =             AllTrips_Station10_2[AllTrips_Station10_2['Inicio_del_viaje'].dt.dayofyear == PlotDay]
