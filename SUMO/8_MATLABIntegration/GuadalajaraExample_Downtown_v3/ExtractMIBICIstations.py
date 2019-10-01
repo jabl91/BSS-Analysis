@@ -3,14 +3,14 @@ from __future__ import print_function
 import xml.etree.ElementTree as ET
 import math
 
-tree = ET.parse('osm_bbox.osm.xml')
-root = tree.getroot()
+# tree = ET.parse('osm_bbox.osm.xml')
+# root = tree.getroot()
 
-treeNet = ET.parse('osm.net.xml')
+treeNet = ET.parse('main.net.xml')
 rootNet = treeNet.getroot()
 
 
-treePoly = ET.parse('osm.poly.xml')
+treePoly = ET.parse('main.poly.xml')
 rootPoly = treePoly.getroot()
 
 bikeStations = []
