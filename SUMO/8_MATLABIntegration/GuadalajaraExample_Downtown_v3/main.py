@@ -114,7 +114,7 @@ def run():
 
             traci.vehicle.setParameter('DynamicVeh_' + str(step),
                                        'device.rerouting.period',
-                                       '1')
+                                       '30')
         if step % (5 / STEP_SIZE) == 0:
             allActiveVehicles = traci.vehicle.getIDList()
             dynamicVehicles = [s for s in allActiveVehicles
