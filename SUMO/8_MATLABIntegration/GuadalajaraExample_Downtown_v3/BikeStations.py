@@ -66,19 +66,30 @@ class BikeStation:
 #
 class BikeStationNetwork:
 
+    # constants
+    C_DEFAULT_NUM_DOCKS = 15
+    C_RELATION_DOCKS_BIKES = 2
+
     # attributes
     StationsOnNetwork = []
 
     ## This is the constructor method for the BikeStation method
-    def __init__(self, BikeStationsInfo):
-        self.BikeStationsDict = {}
-        for Id, BikesNumber, DocksNumber in BikeStationsInfo:
-            self.BikeStationsDict[str(Id)] = BikeStation(
-                Id, BikesNumber, DocksNumber)
+    def __init__(self):
 
         StationsOnNetworkClass = StationInfoClass()
         self.StationsOnNetwork = \
-            StationsOnNetworkClass.getBikeStation2EdgeArray()
+            StationsOnNetworkClass.getBikeStation2EdgeDict()
+
+        self.BikeStationsDict = {}
+        for Id in \
+                list(self.StationsOnNetwork.keys()):
+
+            self.BikeStationsDict[str(Id)] = BikeStation(
+                Id,
+                int(self.C_DEFAULT_NUM_DOCKS / self.C_RELATION_DOCKS_BIKES),
+                self.C_DEFAULT_NUM_DOCKS)
+
+        self.BikeStationDocks = []
 
     ## This is a method to return object to the respective Bike station
     # based on bike station Id
@@ -90,11 +101,8 @@ class BikeStationNetwork:
         return list(self.StationsOnNetwork.keys())
 
 
-myBikeStations = [[0, 10, 20]]
-# Object Creation for BikeStationsNetwork
-
-myBikeNetwork = BikeStationNetwork(myBikeStations)
-currentBikeStation = myBikeNetwork.getBikeStationObject(0)
+myBikeNetwork = BikeStationNetwork()
+currentBikeStation = myBikeNetwork.getBikeStationObject(34)
 if(currentBikeStation.getStationId() != BikeStation.C_STATION_ID_ERROR):
     for i in range(1, 20):
         print(currentBikeStation.pushBike())

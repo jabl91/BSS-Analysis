@@ -188,9 +188,9 @@ class StationInfoClass:
             # print("Neareast station to poi is: " + str(minDifference_sID ))
         # print(self.bikeStationInfo)
 
-    def getBikeStation2EdgeArray(self):
+    def getBikeStation2EdgeDict(self):
         return self.bikeStationInfo
 
 
 # StationInfo = StationInfoClass()
-# print(StationInfo.getBikeStation2EdgeArray())
+# print(StationInfo.getBikeStation2EdgeDict())
