@@ -29,7 +29,7 @@ class GeometryClass:
     #         calculation
     #  @return Slope of the linear equation
     #  @return Intercept of the linear equation
-    def getSlopeandIntercept(self, Point1, Point2, zeroDivision=None):
+    def getSlopeandIntercept(Point1, Point2, zeroDivision=None):
         slope = None
         intercept = None
 
@@ -50,7 +50,7 @@ class GeometryClass:
     #  @param Point1 First set of X,Y location
     #  @param Point2 Second set of X,Y location
     #  @return Distance between two given points
-    def getDistance(self, Point1, Point2):
+    def getDistance(Point1, Point2):
         distance = None
         distance = math.sqrt(
             pow((Point1[1] - Point2[1]), 2) +
