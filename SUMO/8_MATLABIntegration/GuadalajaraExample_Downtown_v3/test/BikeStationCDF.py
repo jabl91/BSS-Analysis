@@ -11,6 +11,11 @@ import random
 class BikeStationCDF:
 
     # attributes
+    # Information about departures or arrivals
+    # this corresponds to the name of the column
+    # to be used.
+    dataLabel = ''
+
     NumeroEstacion = 255
     stationDepartures = []
     stationArrivals = []
@@ -53,15 +58,23 @@ class BikeStationCDF:
     # Index 6 -> Sunday.
     numTripsInDay_cdf = []
 
-    def __init__(self, stationID):
+    def __init__(self, stationID, departure=True):
         np.random.seed(42)
         self.NumeroEstacion = stationID
+
+        if(departure):
+            self.dataLabel = 'Inicio_del_viaje'
+        else:
+            self.dataLabel = 'Fin_del_viaje'
 
         # Read data from file 'filename.csv'
         # (in the same directory that your python process is based)
         # Control delimiters, rows, column names with read_csv (see later)
 
-        data2 = pd.read_csv('./test/InfoStation10.csv')
+        data2 = \
+            pd.read_csv(
+                './test/' +
+                'InfoStation' + str(self.NumeroEstacion) + '.csv')
 
         # Values have been sorted by appareance order
         data2.sort_values(
@@ -176,9 +189,15 @@ class BikeStationCDF:
         self.numTripsInDay_cdf = []
 
         for weekday in range(7):
-            weekdayData = self.stationDepartures[
-                self.stationDepartures['Inicio_del_viaje']
-                .dt.dayofweek == weekday]
+
+            if(self.dataLabel == 'Inicio_del_viaje'):
+                weekdayData = self.stationDepartures[
+                    self.stationDepartures[self.dataLabel]
+                    .dt.dayofweek == weekday]
+            elif(self.dataLabel == 'Fin_del_viaje'):
+                weekdayData = self.stationArrivals[
+                    self.stationArrivals[self.dataLabel]
+                    .dt.dayofweek == weekday]
 
             self.wkDayDepartures.append(weekdayData)
 
@@ -200,16 +219,21 @@ class BikeStationCDF:
                 [bin_edges, BikeStationCDF.computeCDF(hist, bin_edges)])
 
             myDict = {}
-            [myDict.setdefault(s.dayofyear, 0) for s in
-                list(weekdayData.Inicio_del_viaje)]
+            if(self.dataLabel == 'Inicio_del_viaje'):
+                [myDict.setdefault(s.dayofyear, 0) for s in
+                    list(weekdayData.Inicio_del_viaje)]
+            elif(self.dataLabel == 'Fin_del_viaje'):
+                [myDict.setdefault(s.dayofyear, 0) for s in
+                    list(weekdayData.Fin_del_viaje)]
 
             daysDatabase = list(myDict.keys())
 
             tempTripsinDay = []
+
             for day in daysDatabase:
                 tripsInDay = \
                     weekdayData[
-                        weekdayData['Inicio_del_viaje']
+                        weekdayData[self.dataLabel]
                         .dt.dayofyear == day]
 
                 tempTripsinDay.append(len(tripsInDay))
@@ -249,5 +273,8 @@ class BikeStationCDF:
         # plt.hist(tripTimestamps, bins='auto')
 
 
-myBikeStationCDF = BikeStationCDF(10)
-print(np.sort(myBikeStationCDF.getCDFTripsPerDay(0)))
+Station10Departures = BikeStationCDF(10, departure=True)
+print(np.sort(Station10Departures.getCDFTripsPerDay(0)))
+
+Station10Arrivals = BikeStationCDF(10, departure=False)
+print(np.sort(Station10Arrivals.getCDFTripsPerDay(0)))
