@@ -3,6 +3,8 @@ import pandas as pd
 import numpy as np
 # from scipy.special import factorial
 # from scipy.io import loadmat
+# Import required library to generate pseudo-random numbers
+import random
 
 np.random.seed(42)
 
@@ -18,7 +20,7 @@ NumberofDocks_Station10 = 15
 data2 = pd.read_csv('./test/InfoStation10.csv')
 
 # Preview the first 5 lines of the loaded data
-data2.head()
+# data2.head()
 # data2
 
 # Values have been sorted by appareance order
@@ -59,13 +61,14 @@ for _, row in data2.iterrows():
 
     else:
         print('Origen y Destino iguales')
+        raise
 
 # OrderedTimeEvents
 
 # A new column will be created on the main table
 # that contains this information
 data2['EventosTiempoEstacion'] = OrderedTimeEvents
-data2.head()
+# data2.head()
 
 
 # And now the events should be sorted by the new column created
@@ -82,162 +85,137 @@ data2.sort_values(
 # InboundTrips = data[data.Destino_Id == 10]
 # InboundTrips
 
-AllTrips_Station10_2 = \
-    data2[
-        (data2.Origen_Id == NumeroEstacion) |
-        (data2.Destino_Id == NumeroEstacion)]
+stationDepartures = data2[(data2.Origen_Id == NumeroEstacion)]
+stationArrivals = data2[(data2.Destino_Id == NumeroEstacion)]
 # AllTrips_Station10
 
-# Optimization performed taking the same weekday along a year
 
-DayOfTheWeek = 1
-DayOfTheYear = 75
-SameDaysinYear = np.arange(DayOfTheWeek, 365, 7)
-SameDaysinYear
+def computeCDF(n, bins):
+    integral = []
+    bin_width = bins[1] - bins[0]
 
-OptimizationWeek = []
-days = [
-    'Monday', 'Tuesday',
-    'Wednesday', 'Thursday',
-    'Friday', 'Saturday', 'Sunday']
-PlotDay = 124
+    for i, _ in enumerate(n):
+        integral.append(bin_width * sum(n[0:i]))
 
-for dayofweek in days:
-    OptimizationWeekDay = []
-    SameDaysinYear = np.arange(1, 365, 1)
+    return integral
 
-    # Percentage 0 to 100
-    # Final State of the Bike Station after Rebal event
-    Rebal_Percent = np.arange(0, 100, 10)
-    # Percentage 0.00 to 0.50
-    # When should the relocation team approach the station
-    Threshold_Action = 0.10
 
-    for DayinYear in SameDaysinYear:
+def convertSeriesTime2Seconds(time):
+    seconds = time.hour.values * 3600
+    seconds += time.minute.values * 60
+    seconds += time.second.values
+    return seconds
 
-        SingleDayTrips_Station10 = \
-            AllTrips_Station10_2[
-                AllTrips_Station10_2['Inicio_del_viaje']
-                .dt.dayofyear == DayinYear]
 
-        DayName = \
-            SingleDayTrips_Station10['Inicio_del_viaje'].iloc[0].day_name()
-        if(DayName == dayofweek):
+# Pandas DataFrame for all departures within every
+# same day of the week. Index 0 -> Monday, ...
+# Index 6 -> Sunday.
+wkDayDepartures = []
 
-            ResultsOptimization = []
+# Histogram of all departures time within evey
+# same day of the week.
+# Note: Departures time correspond to seconds
+# 24(hours)*3600(seconds) is the maximum value
+# expected.
+# Index 0 -> Monday, ...
+# Index 6 -> Sunday.
+wkDayDepartures_hist = []
 
-            if(DayinYear == PlotDay):
-                PlotBikeStationEvents = []
+# Cumulative distributive function of all departures
+# time within every same day of the week.
+# Note: Departures time correspond to seconds
+# 24(hours)*3600(seconds) is the maximum value
+# expected.
+# Index 0 -> Monday, ...
+# Index 6 -> Sunday.
+wkDayDepartures_cdf = []
 
-            for cur_RebalPerc in Rebal_Percent:
+# List of total number departure trips within
+# every same day of the week.
+# Index 0 -> Monday, ...
+# Index 6 -> Sunday.
+numTripsInDay = []
 
-                OptimizationBadEvents = 0
-                NumberOfBikes = \
-                    int((cur_RebalPerc * NumberofDocks_Station10) / 100)
+# Cumulative distributive function of total number
+# departure trips within every same day of the week.
+# Note: Departures time correspond to seconds
+# 24(hours)*3600(seconds) is the maximum value
+# expected.
+# Index 0 -> Monday, ...
+# Index 6 -> Sunday.
+numTripsInDay_cdf = []
 
-                for _, i in SingleDayTrips_Station10.iterrows():
-                    if((i['Origen_Id'] == NumeroEstacion) &
-                            (i['Destino_Id'] != NumeroEstacion)):
-                        NumberOfBikes -= 1
-                    elif((i['Destino_Id'] == NumeroEstacion) &
-                            (i['Origen_Id'] != NumeroEstacion)):
-                        NumberOfBikes += 1
-                    else:
-                        # print("Algo anda mal")
-                        # print(i['Origen_Id'])
-                        # print(i['Destino_Id'])
-                        break
-                    if((NumberOfBikes <=
-                            int((Threshold_Action) *
-                                NumberofDocks_Station10)) |
-                        (NumberOfBikes >=
-                            int((1 - Threshold_Action) *
-                                NumberofDocks_Station10))):
-                        # print("Camioncito de relocacion")
-                        # print("Dejando la estacion al " +
-                        # str(cur_RebalPerc) + "%")
-                        NumberOfBikes = \
-                            int((
-                                cur_RebalPerc * NumberofDocks_Station10) / 100)
-                        OptimizationBadEvents += 1
-                    # else:
-                        # print("All is gut " + str(NumberOfBikes))
-                    if(DayinYear == PlotDay):
-                        PlotBikeStationEvents.append(NumberOfBikes)
-                ResultsOptimization.append(
-                    [cur_RebalPerc, OptimizationBadEvents])
-            # print(ResultsOptimization)
+for weekday in range(7):
+    weekdayData = stationDepartures[
+        stationDepartures['Inicio_del_viaje']
+        .dt.dayofweek == weekday]
 
-            Percentage = ResultsOptimization[0][0]
-            MinNumberofBadEvents = ResultsOptimization[0][1]
-            SameEvents = []
-            SameEventPercentages = []
-            for i, badevents in ResultsOptimization:
-                if(MinNumberofBadEvents >= badevents):
-                    MinNumberofBadEvents = badevents
-                    Percentage = i
-                    if(len(SameEvents) != 0):
-                        if(SameEvents[-1] == badevents):
-                            SameEvents.append(badevents)
-                            SameEventPercentages.append(i)
-                        else:
-                            SameEvents = [badevents]
-                            SameEventPercentages = [i]
-                    else:
-                        SameEvents.append(badevents)
-                        SameEventPercentages.append(i)
+    wkDayDepartures.append(weekdayData)
 
-            Average = 0
-            for per in SameEventPercentages:
-                Average += per
-            if(len(SameEventPercentages) != 0):
-                Average = Average / len(SameEventPercentages)
-            # print("The optimal percentage of bikes to start is:
-            # "+ str(Percentage))
-            # print("The number of relocations needed were:",
-            # MinNumberofBadEvents)
+    myhistData = \
+        convertSeriesTime2Seconds(weekdayData.Inicio_del_viaje.dt)
 
-            # OptimizationWeekDay Description:
+    hist, bin_edges = \
+        np.histogram(
+            myhistData, bins=24 * 8,
+            density=True,
+            range=(0.0, 24.0 * 3600))
 
-            # [0]DayinYear corresponds to Monday, Tuesday, Wednesday, etc
-            # [1]SameEventPercentages is an array with all the percentages
-            # that matched the MinNumberofBadEvents
-            # [2]Average is the average of all the elements in
-            # SameEventPercentages
-            # [3]Percentage is the maximum of SameEvent Percentages
-            # [4]MinNumberofBadEvents is the minimum number of bike
-            # relocation events for every element of rebalancing
-            # percentages on SameEventPercentages
+    hist = np.append(hist, [0.0])
 
-            OptimizationWeekDay.append([
-                DayinYear, SameEventPercentages,
-                Average, Percentage,
-                MinNumberofBadEvents, DayName])
+    wkDayDepartures_hist.append([hist, bin_edges])
 
-    OptimizationWeek.append(OptimizationWeekDay)
+    wkDayDepartures_cdf.append([bin_edges, computeCDF(hist, bin_edges)])
 
-for optim_day in OptimizationWeek:
-    AveragePerforAllSameDay = 0
-    AverageRelocations = 0
-    for element in optim_day:
-        AveragePerforAllSameDay += element[2]
-        AverageRelocations += element[-2]
+    myDict = {}
+    [myDict.setdefault(s.dayofyear, 0) for s in
+        list(weekdayData.Inicio_del_viaje)]
 
-    if(len(OptimizationWeekDay) != 0):
-        AveragePerforAllSameDay /= len(OptimizationWeekDay)
-        AverageRelocations /= len(OptimizationWeekDay)
+    daysDatabase = list(myDict.keys())
 
-    print(
-        optim_day[0][-1] + ': ' +
-        'AverageRelocYear: ' +
-        str(AverageRelocations))
+    tempTripsinDay = []
+    for day in daysDatabase:
+        tripsInDay = \
+            weekdayData[
+                weekdayData['Inicio_del_viaje']
+                .dt.dayofyear == day]
 
-    print('Relocation Average per event: ' + str(AveragePerforAllSameDay))
-    print()
+        tempTripsinDay.append(len(tripsInDay))
 
-# Test =\
-#    AllTrips_Station10_2[
-#        AllTrips_Station10_2['Inicio_del_viaje'].dt.dayofyear == PlotDay]
-# print(Test)
+    numTripsInDay.append(tempTripsinDay)
 
-# len(PlotBikeStationEvents)
+    hist2, bin_edges2 = \
+        np.histogram(
+            tempTripsinDay, bins=50,
+            density=True,
+            range=(0.0, 100.0))
+    hist2 = np.append(hist2, [0.0])
+
+    numTripsInDay_cdf.append([bin_edges2, computeCDF(hist2, bin_edges2)])
+
+
+# for i in range(7):
+#     print(
+#         'Mean of trips for day: ' + str(i) + ' is: ' +
+#         str(np.mean(numTripsInDay[i])))
+#     lines = plt.plot(
+#         numTripsInDay_cdf[i][0], numTripsInDay_cdf[i][1])
+# plt.legend([
+#     'Monday', 'Tuesday',
+#     'Wednesday', 'Thursday',
+#     'Friday', 'Saturday', 'Sunday'])
+
+def getRndmNumberOfCDF(wkday, myCDF):
+    myRandNum = random.randint(1, 1000)
+    for j, e in enumerate(myCDF[wkday][1]):
+        if(myRandNum <= (e * 1000)):
+            break
+    return myCDF[wkday][0][j]
+
+
+tripTimestamps = []
+for trip in range(int(getRndmNumberOfCDF(0, numTripsInDay_cdf))):
+    tripTimestamps.append(getRndmNumberOfCDF(0, wkDayDepartures_cdf) / 3600)
+print(len(tripTimestamps))
+print(tripTimestamps)
+# plt.hist(tripTimestamps, bins='auto')
