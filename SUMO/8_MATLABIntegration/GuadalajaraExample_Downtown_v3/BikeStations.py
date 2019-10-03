@@ -24,6 +24,7 @@ class BikeStation:
 
     # Constants
     C_STATION_ID_ERROR = '-1'
+    C_MESSAGES = False
 
     # attributes
     stationCDFDepartures = None
@@ -54,10 +55,11 @@ class BikeStation:
 
             # print(self.stationCDFDepartures.numTripsInDay)
             # print(self.stationCDFArrivals.numTripsInDay)
-            print(
-                '####CDF Information for Station####: ' +
-                self.stationId +
-                '\nSuccesfull\n\n')
+            if(self.C_MESSAGES is True):
+                print(
+                    '####CDF Information for Station####: ' +
+                    self.stationId +
+                    '\nSuccesfull\n\n')
         except:
             try:
                 self.stationCDFDepartures = \
@@ -138,6 +140,8 @@ class BikeStationNetwork:
     # constants
     C_DEFAULT_NUM_DOCKS = 15
     C_RELATION_DOCKS_BIKES = 2
+    C_ARRIVALS_IDX = 1.0
+    C_DEPARTURES_IDX = 0.0
 
     # attributes
     StationsOnNetwork = []
@@ -163,25 +167,29 @@ class BikeStationNetwork:
     ## This is a method to return object to the respective Bike station
     # based on bike station Id
     def getBikeStationObject(self, Id):
-        return self.BikeStationsDict.get(str(Id), BikeStation(-1, 0, 0))
+        if(self.BikeStationsDict.get(str(Id), None) is not None):
+            return self.BikeStationsDict.get(str(Id), None)
+        else:
+            print('Bike Station Id: ' + str(Id) + ' is not loaded.')
+            raise
 
     def getAllStationOnNetwork(self):
         # return [id for [id, _] in self.StationsOnNetwork]
         return list(self.StationsOnNetwork.keys())
 
 
-myBikeNetwork = BikeStationNetwork()
-currentBikeStation = myBikeNetwork.getBikeStationObject(34)
-myTrips = currentBikeStation.getTripsOnWeekday(0)
-print(myTrips)
-
-for trip in myTrips:
-    if(trip[1] == 1.0):
-        print(currentBikeStation.pushBike())
-        print(currentBikeStation.availableBikes())
-    else:
-        print(currentBikeStation.removeBike())
-        print(currentBikeStation.availableBikes())
-
-print('Stations on the network are: ')
-print(myBikeNetwork.getAllStationOnNetwork())
+# myBikeNetwork = BikeStationNetwork()
+# currentBikeStation = myBikeNetwork.getBikeStationObject(34)
+# myTrips = currentBikeStation.getTripsOnWeekday(0)
+# print(myTrips)
+#
+# for trip in myTrips:
+#     if(trip[1] == 1.0):
+#         print(currentBikeStation.pushBike())
+#         print(currentBikeStation.availableBikes())
+#     else:
+#         print(currentBikeStation.removeBike())
+#         print(currentBikeStation.availableBikes())
+#
+# print('Stations on the network are: ')
+# print(myBikeNetwork.getAllStationOnNetwork())
