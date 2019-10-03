@@ -181,9 +181,11 @@ class BikeStationNetwork:
         return list(self.StationsOnNetwork.keys())
 
     def getDayItinerary(self, wkday):
+        self.DayItinerary = []
         AllStationsIds = self.getAllStationOnNetwork()
 
         for station in AllStationsIds:
+            station = 2
             currentBikeStation =\
                 self.getBikeStationObject(station)
 
@@ -194,8 +196,13 @@ class BikeStationNetwork:
                 stationId = \
                     np.ones(len(BikeStationTrips)) * int(station)
 
+                DestinationInfo =\
+                    currentBikeStation\
+                    .stationCDFDepartures\
+                    .getStationDestination(wkday, len(BikeStationTrips))
+
                 self.DayItinerary.append(
-                    np.c_[BikeStationTrips, stationId])
+                    np.c_[BikeStationTrips, stationId, DestinationInfo])
 
         return self.DayItinerary
 
