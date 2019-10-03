@@ -188,6 +188,8 @@ class BikeStationCDF:
         # Index 6 -> Sunday.
         self.numTripsInDay_cdf = []
 
+        self.destinationStation_cdf = []
+
         for weekday in range(7):
 
             if(self.dataLabel == 'Inicio_del_viaje'):
@@ -250,6 +252,20 @@ class BikeStationCDF:
             self.numTripsInDay_cdf.append(
                 [bin_edges2, BikeStationCDF.computeCDF(hist2, bin_edges2)])
 
+            destinations = \
+                list(weekdayData.Destino_Id)
+
+            hist3, bin_edges3 = \
+                np.histogram(
+                    destinations, bins=np.max(destinations),
+                    density=True)
+
+            hist3 = np.append(hist3, [0.0])
+
+            self.destinationStation_cdf.append([
+                bin_edges3,
+                BikeStationCDF.computeCDF(hist3, bin_edges3)])
+
     def getRndmNumberOfCDF(wkday, myCDF):
         myRandNum = random.randint(1, 1000)
         for j, e in enumerate(myCDF[wkday][1]):
@@ -271,6 +287,19 @@ class BikeStationCDF:
         # print(tripTimestamps)
         return tripTimestamps
         # plt.hist(tripTimestamps, bins='auto')
+
+    def getStationDestination(self, wkday, numberTrips):
+        if(self.dataLabel == 'Fin_del_viaje'):
+            print(
+                'This method can be used only on Departure object')
+            raise
+        stationDestination = []
+        for trip in range(numberTrips):
+            stationDestination.append(
+                BikeStationCDF.getRndmNumberOfCDF(
+                    wkday, self.destinationStation_cdf))
+
+        return list(np.round(stationDestination).astype(int))
 
 
 # Station10Departures = BikeStationCDF(10, departure=True)
