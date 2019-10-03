@@ -12,6 +12,10 @@
 # import traci
 
 from StationId2Edge import StationInfoClass
+from BikeStationCDF import BikeStationCDF
+from NvMAccelerator import NvMAccelerator
+
+import numpy as np
 
 ## Provide the class description
 
@@ -20,6 +24,10 @@ class BikeStation:
 
     # Constants
     C_STATION_ID_ERROR = '-1'
+
+    # attributes
+    stationCDFDepartures = None
+    stationCDFArrivals = None
 
     ## This is the constructor method for the BikeStation method
     def __init__(
@@ -30,6 +38,41 @@ class BikeStation:
         self.numberOfDocks = numberInitialDocks
         self.numberOfBikes = numberInitialBikes
         self.stationId = str(stationInitialId)
+
+        try:
+            UnpickledData =\
+                NvMAccelerator.pickled_items(
+                    './test/' +
+                    'CDFStation' + self.stationId + '.pkl')
+
+            for i, myData in enumerate(UnpickledData):
+                # print(myData[0])
+                # print(myData[1])
+                self.stationCDFDepartures = myData[0]
+                self.stationCDFArrivals = myData[1]
+                break
+
+            # print(self.stationCDFDepartures.numTripsInDay)
+            # print(self.stationCDFArrivals.numTripsInDay)
+            print(
+                '####CDF Information for Station####: ' +
+                self.stationId +
+                '\nSuccesfull\n\n')
+        except:
+            try:
+                self.stationCDFDepartures = \
+                    BikeStationCDF(stationInitialId, departure=True)
+                self.stationCDFArrivals = \
+                    BikeStationCDF(stationInitialId, departure=False)
+                NvMAccelerator.save_object(
+                    [self.stationCDFDepartures, self.stationCDFArrivals],
+                    './test/' + 'CDFStation' + self.stationId + '.pkl')
+                print(
+                    '####CDF Information for Station####: ' +
+                    self.stationId +
+                    '\nSuccesfull\n\n')
+            except:
+                print('No CDF Information for Station: ' + self.stationId)
 
     ## This is a method to increment the number of available
     # bikes in the station
@@ -60,6 +103,32 @@ class BikeStation:
     #
     def getStationId(self):
         return self.stationId
+
+    ## This method returns a np.array with the timestamps of the
+    # trips that occured within a single day.
+    # Column [0] Timestamp of the trips
+    # Column [1] If value is equal to 1 then it is an arrival
+    # if value is equal to 0 then it is a departure
+    def getTripsOnWeekday(self, wkday):
+        if(self.stationCDFDepartures is not None and
+                self.stationCDFArrivals is not None):
+                myDepartures = \
+                    self.stationCDFDepartures.getCDFTripsPerDay(wkday)
+                myArrivals = \
+                    self.stationCDFArrivals.getCDFTripsPerDay(wkday)
+
+                dep_mat = np.c_[
+                    np.array(myDepartures), np.zeros(len(myDepartures))]
+
+                arri_mat = np.c_[
+                    np.array(myArrivals), np.ones(len(myArrivals))]
+
+                myTrips = np.r_[arri_mat, dep_mat]
+
+                return myTrips[myTrips[:, 0].argsort()]
+
+        else:
+            return []
 
 
 ## Provide the class description
@@ -103,16 +172,16 @@ class BikeStationNetwork:
 
 myBikeNetwork = BikeStationNetwork()
 currentBikeStation = myBikeNetwork.getBikeStationObject(34)
-if(currentBikeStation.getStationId() != BikeStation.C_STATION_ID_ERROR):
-    for i in range(1, 20):
+myTrips = currentBikeStation.getTripsOnWeekday(0)
+print(myTrips)
+
+for trip in myTrips:
+    if(trip[1] == 1.0):
         print(currentBikeStation.pushBike())
         print(currentBikeStation.availableBikes())
-    for i in range(1, 25):
+    else:
         print(currentBikeStation.removeBike())
         print(currentBikeStation.availableBikes())
-else:
-    print('BikeStation.py: Station doesn\'t exist\n')
-    raise
 
 print('Stations on the network are: ')
 print(myBikeNetwork.getAllStationOnNetwork())

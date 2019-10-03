@@ -273,8 +273,8 @@ class BikeStationCDF:
         # plt.hist(tripTimestamps, bins='auto')
 
 
-Station10Departures = BikeStationCDF(10, departure=True)
-print(np.sort(Station10Departures.getCDFTripsPerDay(0)))
-
-Station10Arrivals = BikeStationCDF(10, departure=False)
-print(np.sort(Station10Arrivals.getCDFTripsPerDay(0)))
+# Station10Departures = BikeStationCDF(10, departure=True)
+# print(np.sort(Station10Departures.getCDFTripsPerDay(0)))
+#
+# Station10Arrivals = BikeStationCDF(10, departure=False)
+# print(np.sort(Station10Arrivals.getCDFTripsPerDay(0)))
