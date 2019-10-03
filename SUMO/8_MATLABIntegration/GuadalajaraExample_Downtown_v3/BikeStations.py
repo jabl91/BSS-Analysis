@@ -185,7 +185,6 @@ class BikeStationNetwork:
         AllStationsIds = self.getAllStationOnNetwork()
 
         for station in AllStationsIds:
-            station = 2
             currentBikeStation =\
                 self.getBikeStationObject(station)
 
