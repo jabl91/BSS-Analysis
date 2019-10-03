@@ -143,8 +143,11 @@ class BikeStationNetwork:
     C_ARRIVALS_IDX = 1.0
     C_DEPARTURES_IDX = 0.0
 
+    C_NUMBER_OF_TRIPS = 1
+
     # attributes
     StationsOnNetwork = []
+    DayItinerary = []
 
     ## This is the constructor method for the BikeStation method
     def __init__(self):
@@ -177,6 +180,24 @@ class BikeStationNetwork:
         # return [id for [id, _] in self.StationsOnNetwork]
         return list(self.StationsOnNetwork.keys())
 
+    def getDayItinerary(self, wkday):
+        AllStationsIds = self.getAllStationOnNetwork()
+
+        for station in AllStationsIds:
+            currentBikeStation =\
+                self.getBikeStationObject(station)
+
+            for i in range(self.C_NUMBER_OF_TRIPS):
+                BikeStationTrips = \
+                    currentBikeStation.getTripsOnWeekday(wkday)
+
+                stationId = \
+                    np.ones(len(BikeStationTrips)) * int(station)
+
+                self.DayItinerary.append(
+                    np.c_[BikeStationTrips, stationId])
+
+        return self.DayItinerary
 
 # myBikeNetwork = BikeStationNetwork()
 # currentBikeStation = myBikeNetwork.getBikeStationObject(34)
@@ -193,3 +214,6 @@ class BikeStationNetwork:
 #
 # print('Stations on the network are: ')
 # print(myBikeNetwork.getAllStationOnNetwork())
+
+# Retrive the schedule for the current day for the trips to occur
+# myBikeNetwork.getDayItinerary(0)
