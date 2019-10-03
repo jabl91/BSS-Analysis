@@ -195,10 +195,21 @@ class BikeStationNetwork:
                 stationId = \
                     np.ones(len(BikeStationTrips)) * int(station)
 
-                DestinationInfo =\
+                Destination_Bool = \
+                    BikeStationTrips[:, 1] == \
+                    BikeStationNetwork.C_DEPARTURES_IDX
+
+                DestinationInfoValues =\
                     currentBikeStation\
                     .stationCDFDepartures\
-                    .getStationDestination(wkday, len(BikeStationTrips))
+                    .getStationDestination(
+                        wkday,
+                        len(BikeStationTrips[Destination_Bool]))
+
+                DestinationInfo = np.ones(len(BikeStationTrips)) * -1
+
+                DestinationInfo[Destination_Bool] =\
+                    DestinationInfoValues
 
                 self.DayItinerary.append(
                     np.c_[BikeStationTrips, stationId, DestinationInfo])
