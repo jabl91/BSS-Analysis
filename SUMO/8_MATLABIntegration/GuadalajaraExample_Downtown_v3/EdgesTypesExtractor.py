@@ -229,7 +229,7 @@ class EdgeTypesExtractor:
 
                 traciBoundary_Y = myGeometryAPI.getBoundary_Y()
 
-                m_Edge, b_Edge = myGeometryAPI.getSlopeandIntercept(
+                m_Edge, b_Edge = GeometryClass.getSlopeandIntercept(
                     myPoints[0:2], myPoints[2:4], traciBoundary_Y)
 
                 EdgetoEdgeCenter[myEdge.attrib.get('id')] = \
