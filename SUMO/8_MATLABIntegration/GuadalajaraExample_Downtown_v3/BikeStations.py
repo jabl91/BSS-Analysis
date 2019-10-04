@@ -25,10 +25,12 @@ class BikeStation:
     # Constants
     C_STATION_ID_ERROR = '-1'
     C_MESSAGES = False
+    C_THRESH_RELOC_ACTION = 0.10
 
     # attributes
     stationCDFDepartures = None
     stationCDFArrivals = None
+    relocationsCounter = 0
 
     ## This is the constructor method for the BikeStation method
     def __init__(
@@ -78,8 +80,9 @@ class BikeStation:
 
     ## This is a method to increment the number of available
     # bikes in the station
-    def pushBike(self):
+    def pushBike(self, relocWeight=0.35):
         returnValue = False
+        self.relocationEvent(relocWeight)
         if((self.numberOfDocks - self.numberOfBikes) > 0):
             self.numberOfBikes = self.numberOfBikes + 1
             returnValue = True
@@ -88,8 +91,9 @@ class BikeStation:
 
     ## This is a method to remove the number of available
     # bikes in the station
-    def removeBike(self):
+    def removeBike(self, relocWeight=0.35):
         returnValue = False
+        self.relocationEvent(relocWeight)
         if(self.numberOfBikes > 0):
             self.numberOfBikes = self.numberOfBikes - 1
             returnValue = True
@@ -101,10 +105,30 @@ class BikeStation:
     def availableBikes(self):
         return self.numberOfBikes
 
+    def relocationEvent(self, cur_RebalPerc):
+        if((self.numberOfBikes <=
+                int(
+                    (self.C_THRESH_RELOC_ACTION) *
+                    self.numberOfDocks)) |
+            (self.numberOfBikes >=
+                int((1 - self.C_THRESH_RELOC_ACTION) *
+                    self.numberOfDocks))):
+            # print("Camioncito de relocacion")
+            # print("Dejando la estacion al " +
+            # str(cur_RebalPerc) + "%")
+            self.numberOfBikes = \
+                int(
+                    cur_RebalPerc *
+                    self.numberOfDocks)
+            self.relocationsCounter += 1
+
     ## This is a method to return the number bike station id
     #
     def getStationId(self):
         return self.stationId
+
+    def getStationStats(self):
+        return [self.relocationsCounter]
 
     ## This method returns a np.array with the timestamps of the
     # trips that occured within a single day.
@@ -216,13 +240,14 @@ class BikeStationNetwork:
 
         return self.DayItinerary
 
+
 # myBikeNetwork = BikeStationNetwork()
 # currentBikeStation = myBikeNetwork.getBikeStationObject(34)
 # myTrips = currentBikeStation.getTripsOnWeekday(0)
 # print(myTrips)
 #
 # for trip in myTrips:
-#     if(trip[1] == 1.0):
+#     if(trip[1] == BikeStationNetwork.C_ARRIVALS_IDX):
 #         print(currentBikeStation.pushBike())
 #         print(currentBikeStation.availableBikes())
 #     else:
@@ -231,6 +256,8 @@ class BikeStationNetwork:
 #
 # print('Stations on the network are: ')
 # print(myBikeNetwork.getAllStationOnNetwork())
-
-# Retrive the schedule for the current day for the trips to occur
-# myBikeNetwork.getDayItinerary(0)
+#
+# # Retrive the schedule for the current day for the trips to occur
+# # myBikeNetwork.getDayItinerary(0)
+#
+# print(currentBikeStation.getStationStats())
