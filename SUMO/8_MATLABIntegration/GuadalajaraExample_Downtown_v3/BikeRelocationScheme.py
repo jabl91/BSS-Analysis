@@ -6,11 +6,14 @@ from NvMAccelerator import NvMAccelerator
 
 class BikeRelocationScheme:
 
-    # constants
-    C_DEFAULTNUM_DOCKS = 15
+    # attributes
 
-    def __init__(self, StationsArray):
-        NumberofDocks_Station10 = self.C_DEFAULTNUM_DOCKS
+    BikeRelocationScheme = {}
+
+    def __init__(
+            self,
+            StationsArray,
+            NumberofDocks_Station=15):
         for NumeroEstacion in StationsArray:
 
             try:
@@ -18,8 +21,9 @@ class BikeRelocationScheme:
                     './test/' +
                     'RebalancingStation' + str(NumeroEstacion) + '.pkl')
 
-                for i in myData:
-                    print(i)
+                for element in myData:
+                    self.BikeRelocationScheme[NumeroEstacion] =\
+                        element
                     break
 
                 print('Station Found: ' + str(NumeroEstacion))
@@ -101,7 +105,7 @@ class BikeRelocationScheme:
                 # InboundTrips = data[data.Destino_Id == 10]
                 # InboundTrips
 
-                AllTrips_Station10_2 =\
+                AllTrips_Station_2 =\
                     data2[
                         (data2.Origen_Id == NumeroEstacion) |
                         (data2.Destino_Id == NumeroEstacion)]
@@ -132,21 +136,21 @@ class BikeRelocationScheme:
 
                     for DayinYear in SameDaysinYear:
 
-                        SingleDayTrips_Station10 = \
-                            AllTrips_Station10_2[
-                                AllTrips_Station10_2['Inicio_del_viaje']
+                        SingleDayTrips_Station = \
+                            AllTrips_Station_2[
+                                AllTrips_Station_2['Inicio_del_viaje']
                                 .dt.dayofyear == DayinYear]
 
                         try:
                             DayName = \
-                                SingleDayTrips_Station10[
+                                SingleDayTrips_Station[
                                     'Inicio_del_viaje'].iloc[0].day_name()
                         except:
                             continue
 
                         if(DayName == dayofweek):
 
-                            # SingleDayTrips_Station10
+                            # SingleDayTrips_Station
 
                             ResultsOptimization = []
 
@@ -159,10 +163,10 @@ class BikeRelocationScheme:
                                 NumberOfBikes = \
                                     int((
                                         cur_RebalPerc *
-                                        NumberofDocks_Station10) / 100)
+                                        NumberofDocks_Station) / 100)
 
                                 for _, i in \
-                                        SingleDayTrips_Station10.iterrows():
+                                        SingleDayTrips_Station.iterrows():
                                     if(
                                         (i['Origen_Id'] ==
                                             NumeroEstacion) &
@@ -184,17 +188,17 @@ class BikeRelocationScheme:
                                     if((NumberOfBikes <=
                                             int(
                                                 (Threshold_Action) *
-                                                NumberofDocks_Station10)) |
+                                                NumberofDocks_Station)) |
                                         (NumberOfBikes >=
                                             int((1 - Threshold_Action) *
-                                                NumberofDocks_Station10))):
+                                                NumberofDocks_Station))):
                                         # print("Camioncito de relocacion")
                                         # print("Dejando la estacion al " +
                                         # str(cur_RebalPerc) + "%")
                                         NumberOfBikes = \
                                             int((
                                                 cur_RebalPerc *
-                                                NumberofDocks_Station10) / 100)
+                                                NumberofDocks_Station) / 100)
                                         OptimizationBadEvents += 1
                                     # else:
                                         # print("All is gut " +
@@ -284,6 +288,9 @@ class BikeRelocationScheme:
                         optim_day[0][-1], AverageRelocations,
                         AveragePerforAllSameDay, NumeroEstacion])
 
+                self.BikeRelocationScheme[NumeroEstacion] =\
+                    AverageInfo
+
                 NvMAccelerator.save_object(
                     AverageInfo,
                     './test/' +
@@ -291,5 +298,11 @@ class BikeRelocationScheme:
 
                 print('Station Analyzed: ' + str(NumeroEstacion))
 
+    def getRebalancingWeights(self):
+        return self.BikeRelocationScheme
 
-myBikeRelocationScheme = BikeRelocationScheme([2])
+
+# StationNumber = 2
+# WkdDay = 6
+# myBikeRelocationScheme = BikeRelocationScheme([StationNumber])
+# print(myBikeRelocationScheme.getRebalancingWeights()[StationNumber][WkdDay])
