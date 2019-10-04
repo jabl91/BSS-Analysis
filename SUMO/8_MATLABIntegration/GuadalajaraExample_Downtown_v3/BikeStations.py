@@ -32,6 +32,9 @@ class BikeStation:
     stationCDFArrivals = None
     relocationsCounter = 0
 
+    backupInitialBikes = 0
+    backupInitialDocks = 0
+
     ## This is the constructor method for the BikeStation method
     def __init__(
             self,
@@ -39,7 +42,9 @@ class BikeStation:
             numberInitialBikes=10,
             numberInitialDocks=20):
         self.numberOfDocks = numberInitialDocks
+        self.backupInitialDocks = numberInitialDocks
         self.numberOfBikes = numberInitialBikes
+        self.backupInitialBikes = numberInitialBikes
         self.stationId = str(stationInitialId)
 
         try:
@@ -156,6 +161,11 @@ class BikeStation:
         else:
             return []
 
+    def resetBikeStation(self):
+        self.relocationsCounter = 0
+        self.numberOfDocks = self.backupInitialDocks
+        self.numberOfBikes = self.backupInitialBikes
+
 
 ## Provide the class description
 #
@@ -240,6 +250,10 @@ class BikeStationNetwork:
 
         return self.DayItinerary
 
+    def resetNetwork(self):
+        for Id in \
+                list(self.StationsOnNetwork.keys()):
+            self.getBikeStationObject(Id).resetBikeStation()
 
 # myBikeNetwork = BikeStationNetwork()
 # currentBikeStation = myBikeNetwork.getBikeStationObject(34)
