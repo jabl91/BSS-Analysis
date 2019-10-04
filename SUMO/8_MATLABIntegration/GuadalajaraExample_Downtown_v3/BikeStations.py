@@ -138,7 +138,7 @@ class BikeStation:
 class BikeStationNetwork:
 
     # constants
-    C_DEFAULT_NUM_DOCKS = 15
+    C_DEFAULT_NUM_DOCKS = 20
     C_RELATION_DOCKS_BIKES = 2
     C_ARRIVALS_IDX = 1.0
     C_DEPARTURES_IDX = 0.0

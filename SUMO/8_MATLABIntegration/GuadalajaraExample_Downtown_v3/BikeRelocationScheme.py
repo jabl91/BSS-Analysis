@@ -6,8 +6,11 @@ from NvMAccelerator import NvMAccelerator
 
 class BikeRelocationScheme:
 
-    # attributes
+    # constants
+    C_MESSAGES = False
+    C_WEIGHTINDEX = 2
 
+    # attributes
     BikeRelocationScheme = {}
 
     def __init__(
@@ -25,8 +28,11 @@ class BikeRelocationScheme:
                     self.BikeRelocationScheme[NumeroEstacion] =\
                         element
                     break
-
-                print('Station Found: ' + str(NumeroEstacion))
+                if(self.C_MESSAGES is True):
+                    print(
+                        'Bike Relocation for Station ' +
+                        str(NumeroEstacion) +
+                        ' loaded.')
 
             except:
 
