@@ -168,15 +168,17 @@ if __name__ == '__main__':
     # This start a multi client connection, port and client number
     # must be configured
 
-    # traci.start([sumoBinary, '-c', 'osm.sumocfg',
-    #                         '--tripinfo-output', 'output/tripinfo.xml',
-    #                         '--num-clients', '2'], port=58890)
+    traci.start([
+        sumoBinary, '-c', 'main.sumocfg',
+        '--tripinfo-output', 'output/tripinfo.xml',
+        '--num-clients', '2'], port=58890)
 
     # This is the normal way of using traci. sumo is started as a
     # subprocess and then the python script connects and runs
 
-    traci.start([sumoBinary, '-c', 'main.sumocfg',
-                             '--tripinfo-output', 'output/tripinfo.xml'])
+    # traci.start([
+    #     sumoBinary, '-c', 'main.sumocfg',
+    #     '--tripinfo-output', 'output/tripinfo.xml'])
 
     # Support for MultiClient TraCI Requests
     traci.setOrder(1)
