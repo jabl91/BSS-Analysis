@@ -244,9 +244,8 @@ class BikeStationCDF:
 
             hist2, bin_edges2 = \
                 np.histogram(
-                    tempTripsinDay, bins=50,
-                    density=True,
-                    range=(0.0, 100.0))
+                    tempTripsinDay, bins=100,
+                    density=True)
             hist2 = np.append(hist2, [0.0])
 
             self.numTripsInDay_cdf.append(
