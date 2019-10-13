@@ -184,7 +184,7 @@ class BikeStationNetwork:
     DayItinerary = []
 
     ## This is the constructor method for the BikeStation method
-    def __init__(self):
+    def __init__(self, NumberOfDocks=20):
 
         StationsOnNetworkClass = StationInfoClass()
         self.StationsOnNetwork = \
@@ -196,8 +196,8 @@ class BikeStationNetwork:
 
             self.BikeStationsDict[str(Id)] = BikeStation(
                 Id,
-                int(self.C_DEFAULT_NUM_DOCKS / self.C_RELATION_DOCKS_BIKES),
-                self.C_DEFAULT_NUM_DOCKS)
+                int(NumberOfDocks * 0.50),
+                NumberOfDocks)
 
         self.BikeStationDocks = []
 
