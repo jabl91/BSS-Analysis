@@ -85,9 +85,9 @@ class BikeStation:
 
     ## This is a method to increment the number of available
     # bikes in the station
-    def pushBike(self, relocWeight=0.35):
+    def pushBike(self, relocWeight=50):
         returnValue = False
-        self.relocationEvent(relocWeight)
+        self.relocationEvent(relocWeight * 0.01)
         if((self.numberOfDocks - self.numberOfBikes) > 0):
             self.numberOfBikes = self.numberOfBikes + 1
             returnValue = True
@@ -96,9 +96,9 @@ class BikeStation:
 
     ## This is a method to remove the number of available
     # bikes in the station
-    def removeBike(self, relocWeight=0.35):
+    def removeBike(self, relocWeight=50):
         returnValue = False
-        self.relocationEvent(relocWeight)
+        self.relocationEvent(relocWeight * 0.01)
         if(self.numberOfBikes > 0):
             self.numberOfBikes = self.numberOfBikes - 1
             returnValue = True
