@@ -538,12 +538,12 @@ class RouteAnalysis:
                 # in order to build the Vector of the origin point
                 # (The current EdgeCenter iteration variable))
 
-                neg_dist = myGeometryAPI.getDistance(
+                neg_dist = GeometryClass.getDistance(
                     [x_rng[0], y_neg],
                     [float(EdgeCenters[i + 1][0]),
                      float(EdgeCenters[i + 1][1])])
 
-                pos_dist = myGeometryAPI.getDistance(
+                pos_dist = GeometryClass.getDistance(
                     [x_rng[1], y_pos],
                     [float(EdgeCenters[i + 1][0]),
                      float(EdgeCenters[i + 1][1])])
@@ -586,12 +586,12 @@ class RouteAnalysis:
                 # in order to build the Vector of the origin point
                 # (The current EdgeCenter iteration variable))
 
-                neg_dist = myGeometryAPI.getDistance(
+                neg_dist = GeometryClass.getDistance(
                     [x_rng[0], y_neg],
                     [float(self.currentEdgeCenters[BaseEdgeIdx][0]),
                      float(self.currentEdgeCenters[BaseEdgeIdx][1])])
 
-                pos_dist = myGeometryAPI.getDistance(
+                pos_dist = GeometryClass.getDistance(
                     [x_rng[1], y_pos],
                     [float(self.currentEdgeCenters[BaseEdgeIdx][0]),
                      float(self.currentEdgeCenters[BaseEdgeIdx][1])])

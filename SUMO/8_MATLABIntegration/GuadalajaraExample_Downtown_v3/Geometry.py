@@ -95,8 +95,8 @@ class GeometryClass:
 
         # print(Vector1, Vector2)
 
-        distVector1 = self.getDistance([0, 0], Vector1)
-        distVector2 = self.getDistance([0, 0], Vector2)
+        distVector1 = GeometryClass.getDistance([0, 0], Vector1)
+        distVector2 = GeometryClass.getDistance([0, 0], Vector2)
 
         # print(distVector1, distVector2)
         dotProduct = \
