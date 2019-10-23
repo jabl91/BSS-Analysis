@@ -14,13 +14,12 @@
     </input>
 
     <processing>
-        <ignore-route-errors value="true"/>
 		<lateral-resolution value="1." />
 		<!--<time-to-teleport value="20"/>-->
 		<default.action-step-length value="1"/>
 		<!--<default.speeddev value="0.5"/>-->
 		<lanechange.overtake-right value="true"/>
-		<scale value="3.0"/>
+      		<threads value="4"/>
     </processing>
 
 	<time>
@@ -30,7 +29,7 @@
     <routing>
         <device.rerouting.adaptation-steps value="180"/>
 		<device.rerouting.threads value="4"/>
-		<device.rerouting.period value="1"/>
+		<device.rerouting.period value="180"/>
 		<device.rerouting.probability value="1.0"/>
     </routing>
 
