@@ -27,7 +27,7 @@
 -->
 
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
-    <vType id="bike" length="0.60" vClass="bicycle" width="0.20"/>
+    <vType id="bike" length="0.60" vClass="bicycle" width="0.20" maxSpeed="2"/>
     <vehicle id="bike_3.0" type="bike" depart="0.79" departPos="random_free">
         <route edges="167280591#13 298742258#4 122601941#11 431593439#6 431593439#7 119409501#0 -119417247#3"/>
     </vehicle>
