@@ -89,53 +89,53 @@ def run():
     """execute the TraCI control loop"""
     step = 0
 
-    traci.route.add('myDynamicTrip', ['startEdge', 'endEdge'])
-    myRouteAnalysis = RouteAnalysis()
+    # traci.route.add('myDynamicTrip', ['startEdge', 'endEdge'])
+    # myRouteAnalysis = RouteAnalysis()
 
-    while traci.simulation.getMinExpectedNumber() > 0:
+    while True:
         traci.simulationStep()
-        step += 1
-        if step % (10 / STEP_SIZE) == 0:
-
-            traci.vehicle.add('DynamicVeh_' + str(step),
-                              'myDynamicTrip',
-                              typeID='bike')
-            traci.vehicle.setColor('DynamicVeh_' + str(step),
-                                   (0, 0, 255))
-            traci.vehicle.setRoutingMode(
-                'DynamicVeh_' + str(step),
-                traci.constants.ROUTING_MODE_AGGREGATED)
-            traci.vehicle.changeTarget('DynamicVeh_' + str(step),
-                                       'endEdge')
-
-            traci.vehicle.setParameter('DynamicVeh_' + str(step),
-                                       'has.rerouting.device',
-                                       'true')
-
-            traci.vehicle.setParameter('DynamicVeh_' + str(step),
-                                       'device.rerouting.period',
-                                       '30')
-        if step % (5 / STEP_SIZE) == 0:
-            allActiveVehicles = traci.vehicle.getIDList()
-            dynamicVehicles = [s for s in allActiveVehicles
-                               if 'DynamicVeh_' in s]
-
-            if dynamicVehicles:
-                myRouteAnalysis.convertVehicleLane2VehicleEdge(
-                    traci.vehicle.getLaneID(dynamicVehicles[0]))
-                # print(traci.edge.getLaneNumber(vehicleEdge))
-                # print(360 - traci.vehicle.getAngle(dynamicVehicles[0]))
-
-        if step % (50 / STEP_SIZE) == 0:
-            # if dynamicVehicles:
-            #    traci.vehicle.changeTarget(dynamicVehicles[0], 'startEdge')
-
-            myCurrentRoutes = traci.route.getIDList()
-            if myCurrentRoutes:
-                myRouteAnalysis.setCurrentRoute(myCurrentRoutes[0])
-                # print(myRouteAnalysis.getCurrentRoute())
-                # print(myRouteAnalysis.getAllEdges())
-                myRouteAnalysis.RA_mainFunction()
+        # step += 1
+        # if step % (10 / STEP_SIZE) == 0:
+        #
+        #     traci.vehicle.add('DynamicVeh_' + str(step),
+        #                       'myDynamicTrip',
+        #                       typeID='bike')
+        #     traci.vehicle.setColor('DynamicVeh_' + str(step),
+        #                            (0, 0, 255))
+        #     traci.vehicle.setRoutingMode(
+        #         'DynamicVeh_' + str(step),
+        #         traci.constants.ROUTING_MODE_AGGREGATED)
+        #     traci.vehicle.changeTarget('DynamicVeh_' + str(step),
+        #                                'endEdge')
+        #
+        #     traci.vehicle.setParameter('DynamicVeh_' + str(step),
+        #                                'has.rerouting.device',
+        #                                'true')
+        #
+        #     traci.vehicle.setParameter('DynamicVeh_' + str(step),
+        #                                'device.rerouting.period',
+        #                                '30')
+        # if step % (5 / STEP_SIZE) == 0:
+        #     allActiveVehicles = traci.vehicle.getIDList()
+        #     dynamicVehicles = [s for s in allActiveVehicles
+        #                        if 'DynamicVeh_' in s]
+        #
+        #     if dynamicVehicles:
+        #         myRouteAnalysis.convertVehicleLane2VehicleEdge(
+        #             traci.vehicle.getLaneID(dynamicVehicles[0]))
+        #         # print(traci.edge.getLaneNumber(vehicleEdge))
+        #         # print(360 - traci.vehicle.getAngle(dynamicVehicles[0]))
+        #
+        # if step % (50 / STEP_SIZE) == 0:
+        #     # if dynamicVehicles:
+        #     #    traci.vehicle.changeTarget(dynamicVehicles[0], 'startEdge')
+        #
+        #     myCurrentRoutes = traci.route.getIDList()
+        #     if myCurrentRoutes:
+        #         myRouteAnalysis.setCurrentRoute(myCurrentRoutes[0])
+        #         # print(myRouteAnalysis.getCurrentRoute())
+        #         # print(myRouteAnalysis.getAllEdges())
+        #         myRouteAnalysis.RA_mainFunction()
 
             # print(traci.vehicletype.getIDList())
     traci.close()
